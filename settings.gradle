@@ -1,0 +1,3 @@
+include ':common', ':parser_elfso', ':parser_arsc', ':parser_manifest', ':parser_dex'
+include ':elfso_parser'
+rootProject.name = 'ApkParser'

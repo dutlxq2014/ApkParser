@@ -1,0 +1,20 @@
+group 'com.codesky'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile project(':common')
+    compile project(':parser_elfso')
+    compile project(':parser_dex')
+    compile project(':parser_arsc')
+    compile project(':parser_manifest')
+}
