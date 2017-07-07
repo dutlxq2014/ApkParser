@@ -19,8 +19,11 @@ public class ElfFile {
     // Tools
     private SectionStreamer mStreamer;
     // Sections
+    public Eident eident;
     public ElfHeader elfHeader;
     public ProgramHeader programHeader;
+    public SectionHeader[] sectionHeaders;
+    public StringTable stringTable;
 
     public ElfFile() {
 
@@ -31,7 +34,7 @@ public class ElfFile {
         racFile.seek(0);
 
         // Determine endian
-        Eident eident = parseIdent(racFile);
+        eident = parseIdent(racFile);
         if (eident.ei_data == Eident.ELFDATA2MSB) {
             mStreamer = new BigEndianStreamer();
         } else if (eident.ei_data == Eident.ELFDATA2LSB) {
@@ -44,6 +47,17 @@ public class ElfFile {
         elfHeader = parseHeader(racFile);
         System.out.println(elfHeader);
 
+        // Program header
+
+        // Section header
+        sectionHeaders = parseSectionHeaders(racFile);
+        for (int i=0; i<sectionHeaders.length; ++i) {
+            System.out.println("Section header-" + i);
+            System.out.print(sectionHeaders[i]);
+        }
+
+        // String table
+
 
         LogUtil.i("Parse end!");
     }
@@ -51,9 +65,9 @@ public class ElfFile {
     private Eident parseIdent(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
         racFile.seek(0);
-        byte[] ident = new byte[Eident.EI_NIDENT];
-        racFile.read(ident, 0, ident.length);
-        Eident eident = Eident.parseFrom(ident);
+        byte[] bytes = new byte[Eident.EI_NIDENT];
+        racFile.read(bytes, 0, bytes.length);
+        Eident eident = Eident.parseFrom(bytes);
         racFile.seek(old);
         return eident;
     }
@@ -61,11 +75,45 @@ public class ElfFile {
     private ElfHeader parseHeader(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
         racFile.seek(0);
-        byte[] header = new byte[ElfHeader.LENGTH];
-        racFile.read(header, 0, header.length);
-        mStreamer.use(header);
-        ElfHeader elfHeader = ElfHeader.parseFrom(mStreamer);
+        byte[] bytes = new byte[ElfHeader.LENGTH];
+        racFile.read(bytes, 0, bytes.length);
+        mStreamer.use(bytes);
+        ElfHeader header = ElfHeader.parseFrom(mStreamer);
         racFile.seek(old);
-        return elfHeader;
+        return header;
+    }
+
+    private ProgramHeader parseProgramHeader(RandomAccessFile racFile) throws IOException {
+        long old = racFile.getFilePointer();
+        racFile.seek(0);
+        racFile.seek(old);
+        return null;
+    }
+
+    private StringTable parseStringTable(RandomAccessFile racFile) throws IOException {
+        long old = racFile.getFilePointer();
+        racFile.seek(0);
+        racFile.seek(old);
+        return null;
+    }
+
+    private SectionHeader[] parseSectionHeaders(RandomAccessFile racFile) throws IOException {
+        long old = racFile.getFilePointer();
+        racFile.seek(0);
+        long offset = elfHeader.e_shoff;
+        int entSize = elfHeader.e_shentsize;
+        int num = elfHeader.e_shnum;
+
+        byte[] bytes = new byte[entSize * num];
+        racFile.seek(offset);
+        racFile.read(bytes, 0, bytes.length);
+        mStreamer.use(bytes);
+
+        SectionHeader[] shs = new SectionHeader[num];
+        for (int i=0; i<num; ++i) {
+            shs[i] = SectionHeader.parseFrom(mStreamer);
+        }
+        racFile.seek(old);
+        return shs;
     }
 }

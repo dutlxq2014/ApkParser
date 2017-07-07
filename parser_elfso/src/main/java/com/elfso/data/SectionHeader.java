@@ -1,5 +1,8 @@
 package com.elfso.data;
 
+import com.common.PrintUtil;
+import com.elfso.stream.SectionStreamer;
+
 /**
  *
  * Created by xueqiulxq on 07/07/2017.
@@ -52,4 +55,59 @@ public class SectionHeader {
     public long sh_info;        // Elf32_Word
     public long sh_addralign;   // Elf32_Word
     public long sh_entsize;     // Elf32_Word
+
+    public static SectionHeader parseFrom(SectionStreamer s) {
+        SectionHeader h = new SectionHeader();
+        h.sh_name = s.readElf32Word();
+        h.sh_type = s.readElf32Word();
+        h.sh_flags = s.readElf32Word();
+        h.sh_addr = s.readElf32Addr();
+        h.sh_offset = s.readElf32Off();
+        h.sh_size = s.readElf32Word();
+        h.sh_link = s.readElf32Word();
+        h.sh_info = s.readElf32Word();
+        h.sh_addralign = s.readElf32Word();
+        h.sh_entsize = s.readElf32Word();
+        return h;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String form = "%-12s\t%s\n";
+        builder.append(String.format(form, "sh_name", PrintUtil.hex4(sh_name)));
+        String type;
+        switch ((int)sh_type) {
+            case SHT_NULL: type = "SHT_NULL"; break;
+            case SHT_PROGBITS: type = "SHT_PROGBITS .comment .data .data1 .debug .fini .got .init .interp .line .plt .rodata .rodata1 .text"; break;
+            case SHT_SYMTAB: type = "SHT_SYMTAB .symtab"; break;
+            case SHT_STRTAB: type = "SHT_STRTAB .dynstr .shstrtab .strtab"; break;
+            case SHT_RELA: type = "SHT_RELA .relaname"; break;
+            case SHT_HASH: type = "SHT_HASH .hash"; break;
+            case SHT_DYNAMIC: type = "SHT_DYNAMIC .dynamic"; break;
+            case SHT_NOTE: type = "SHT_NOTE .note"; break;
+            case SHT_NOBITS: type = "SHT_NOBITS .bss"; break;
+            case SHT_REL: type = "SHT_REL relname"; break;
+            case SHT_SHLIB: type = "SHT_SHLIB"; break;
+            case SHT_DYNSYM: type = "SHT_DYNSYM .dynsym"; break;
+            case SH_NUM: type = "SH_NUM"; break;
+            case SHT_LOPROC: type = "SHT_LOPROC"; break;
+            case SHT_HIPROC: type = "SHT_HIPROC"; break;
+            case SHT_LOUSER: type = "SHT_LOUSER"; break;
+            case SHT_HIUSER: type = "SHT_HIUSER"; break;
+            default: type = "unknow";
+        }
+        builder.append(String.format(form, "sh_type", type));
+        builder.append(String.format(form, "sh_flags", PrintUtil.hex4(sh_flags)));
+        builder.append(String.format(form, "sh_addr", PrintUtil.hex4(sh_addr)));
+        builder.append(String.format(form, "sh_offset", PrintUtil.hex4(sh_offset)));
+        builder.append(String.format(form, "sh_size", PrintUtil.hex4(sh_size)));
+        builder.append(String.format(form, "sh_link", PrintUtil.hex4(sh_link)));
+        builder.append(String.format(form, "sh_info", PrintUtil.hex4(sh_info)));
+        builder.append(String.format(form, "sh_addralign", PrintUtil.hex4(sh_addralign)));
+        builder.append(String.format(form, "sh_entsize", PrintUtil.hex4(sh_entsize)));
+
+        builder.append('\n');
+        return builder.toString();
+    }
 }
