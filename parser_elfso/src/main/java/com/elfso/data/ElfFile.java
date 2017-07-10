@@ -57,19 +57,29 @@ public class ElfFile {
 
         completeElfDetails();
 
-        // Print
-        System.out.println(elfHeader);
-        for (int i=0; i<programHeaders.length; ++i) {
-            System.out.println("Program header-" + i);
-            System.out.println(programHeaders[i]);
-        }
-        for (int i=0; i<sectionHeaders.length; ++i) {
-            System.out.println("Section header-" + i);
-            System.out.print(sectionHeaders[i]);
-        }
-        System.out.println(shStringTable);
+        LogUtil.i("Parse end!\n");
+    }
 
-        LogUtil.i("\nParse end!");
+    @Override
+    public String toString() {
+
+        StringBuilder builder = new StringBuilder(4096);
+
+        builder.append(elfHeader).append('\n');
+
+        for (int i=0; i<programHeaders.length; ++i) {
+            builder.append("Program header-").append(i).append('\n');
+            builder.append(programHeaders[i]);
+        }
+
+        for (int i=0; i<sectionHeaders.length; ++i) {
+            builder.append("Section header-").append(i).append('\n');
+            builder.append(sectionHeaders[i]);
+        }
+
+        builder.append(shStringTable).append('\n');
+
+        return builder.toString();
     }
 
     private Eident parseIdent(RandomAccessFile racFile) throws IOException {

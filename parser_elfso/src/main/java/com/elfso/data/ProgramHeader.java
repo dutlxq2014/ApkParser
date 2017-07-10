@@ -68,6 +68,7 @@ public class ProgramHeader {
         builder.append(String.format(form, "p_memsz", PrintUtil.hex4(p_memsz)));
         builder.append(String.format(form, "p_flags", PrintUtil.hex4(p_flags)));
         builder.append(String.format(form, "p_align", PrintUtil.hex4(p_align)));
+        builder.append('\n');
 
         return builder.toString();
     }

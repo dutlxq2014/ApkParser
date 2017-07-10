@@ -33,7 +33,7 @@ public class ElfParser {
         try {
             raf = FileUtil.loadAsRAF("parser_elfso/res/libhello-jni.so");
             ElfFile elfFile = new ElfParser().parse(raf);
-
+            System.out.println(elfFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
