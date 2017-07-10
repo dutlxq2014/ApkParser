@@ -1,6 +1,8 @@
 package com.elfso.stream;
 
 
+import com.common.LogUtil;
+
 /**
  *
  * Created by xueqiulxq on 07/07/2017.
@@ -19,9 +21,19 @@ public abstract class SectionStreamer {
         mData = data;
     }
 
+    public int length() {
+        return mData != null ? mData.length : 0;
+    }
+
     public byte[] read(int len) {
-        if (len + cursor > mData.length) {
-            throw new RuntimeException("Section runs out of bound!");
+        if (cursor >= mData.length) {
+            LogUtil.e("Stream has end!!");
+            return null;
+        }
+        if (cursor + len > mData.length) {
+            LogUtil.e(String.format("Cannot read %d bytes with only %d remains. Return %bytes!",
+                    len, mData.length - cursor, mData.length - cursor));
+            len = mData.length - cursor;
         }
         byte[] ret = new byte[len];
         System.arraycopy(mData, cursor, ret, 0, len);

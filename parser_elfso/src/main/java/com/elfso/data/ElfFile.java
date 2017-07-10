@@ -57,7 +57,8 @@ public class ElfFile {
         }
 
         // String table
-
+        StringTable shstrTable = parseStringTable(racFile);
+        System.out.println(shstrTable);
 
         LogUtil.i("Parse end!");
     }
@@ -93,8 +94,15 @@ public class ElfFile {
     private StringTable parseStringTable(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
         racFile.seek(0);
+        int ndx = elfHeader.e_shstrndx;
+        SectionHeader shstrHeader = sectionHeaders[ndx];
+        racFile.seek(shstrHeader.sh_offset);
+        byte[] bytes = new byte[(int)shstrHeader.sh_size];
+        racFile.read(bytes, 0, bytes.length);
+        mStreamer.use(bytes);
+        StringTable strTab = StringTable.parseFrom(mStreamer);
         racFile.seek(old);
-        return null;
+        return strTab;
     }
 
     private SectionHeader[] parseSectionHeaders(RandomAccessFile racFile) throws IOException {

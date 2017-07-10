@@ -97,7 +97,7 @@ public class SectionHeader {
             case SHT_HIUSER: type = "SHT_HIUSER"; break;
             default: type = "unknow";
         }
-        builder.append(String.format(form, "sh_type", type));
+        builder.append(String.format(form, "sh_type", PrintUtil.hex4(sh_type) + "\t" + type));
         builder.append(String.format(form, "sh_flags", PrintUtil.hex4(sh_flags)));
         builder.append(String.format(form, "sh_addr", PrintUtil.hex4(sh_addr)));
         builder.append(String.format(form, "sh_offset", PrintUtil.hex4(sh_offset)));
