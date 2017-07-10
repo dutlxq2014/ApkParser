@@ -32,6 +32,7 @@ public class ElfParser {
         RandomAccessFile raf = null;
         try {
             raf = FileUtil.loadAsRAF("parser_elfso/res/libhello-jni.so");
+//            raf = FileUtil.loadAsRAF("parser_elfso/res/libjiagu.so");
             ElfFile elfFile = new ElfParser().parse(raf);
             System.out.println(elfFile);
         } catch (FileNotFoundException e) {

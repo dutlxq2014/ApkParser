@@ -4,7 +4,7 @@ import com.common.LogUtil;
 import com.elf.excep.FormatException;
 import com.elfso.stream.BigEndianStreamer;
 import com.elfso.stream.LittleEndianStreamer;
-import com.elfso.stream.SectionStreamer;
+import com.elfso.stream.ElfStreamer;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -17,7 +17,7 @@ import java.io.RandomAccessFile;
 public class ElfFile {
 
     // Tools
-    private SectionStreamer mStreamer;
+    private ElfStreamer mStreamer;
     // Sections
     public Eident eident;
     public ElfHeader elfHeader;
@@ -43,19 +43,19 @@ public class ElfFile {
             throw new FormatException("Illegal data format");
         }
 
-        // header
+        // Elf header
         elfHeader = parseHeader(racFile);
 
-        // Program header
+        // Program headers
         programHeaders = parseProgramHeader(racFile);
 
-        // Section header
+        // Section headers
         sectionHeaders = parseSectionHeaders(racFile);
 
         // String table
         shStringTable = parseShStringTable(racFile);
 
-        completeElfDetails();
+        completeElfDetails(racFile);
 
         LogUtil.i("Parse end!\n");
     }
@@ -105,7 +105,6 @@ public class ElfFile {
 
     private ProgramHeader[] parseProgramHeader(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
-        racFile.seek(0);
         long offset = elfHeader.e_phoff;
         int entSize = elfHeader.e_phentsize;
         int num = elfHeader.e_phnum;
@@ -125,7 +124,6 @@ public class ElfFile {
 
     private StringTable parseShStringTable(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
-        racFile.seek(0);
         int ndx = elfHeader.e_shstrndx;
         SectionHeader shstrHeader = sectionHeaders[ndx];
         racFile.seek(shstrHeader.sh_offset);
@@ -139,7 +137,6 @@ public class ElfFile {
 
     private SectionHeader[] parseSectionHeaders(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
-        racFile.seek(0);
         long offset = elfHeader.e_shoff;
         int entSize = elfHeader.e_shentsize;
         int num = elfHeader.e_shnum;
@@ -157,9 +154,21 @@ public class ElfFile {
         return shs;
     }
 
-    private void completeElfDetails() {
+    private void completeElfDetails(RandomAccessFile racFile) throws IOException {
+        long old = racFile.getFilePointer();
+        // Section headers
         for (SectionHeader sh : sectionHeaders) {
             sh.fillDetail(shStringTable);
         }
+        // Program headers
+        for (ProgramHeader ph : programHeaders) {
+            racFile.seek(ph.p_offset);
+            long size = ph.p_filesz;
+            byte[] bytes = new byte[(int)size];
+            racFile.read(bytes, 0, bytes.length);
+            mStreamer.use(bytes);
+            ph.fillDetail(mStreamer);
+        }
+        racFile.seek(old);
     }
 }

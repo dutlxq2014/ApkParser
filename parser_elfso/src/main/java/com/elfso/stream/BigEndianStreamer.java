@@ -6,7 +6,7 @@ package com.elfso.stream;
  * Created by xueqiulxq on 07/07/2017.
  */
 
-public class BigEndianStreamer extends SectionStreamer {
+public class BigEndianStreamer extends ElfStreamer {
 
     public BigEndianStreamer() {
         super();

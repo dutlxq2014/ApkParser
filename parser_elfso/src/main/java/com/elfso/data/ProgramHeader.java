@@ -1,7 +1,7 @@
 package com.elfso.data;
 
 import com.common.PrintUtil;
-import com.elfso.stream.SectionStreamer;
+import com.elfso.stream.ElfStreamer;
 
 /**
  *
@@ -30,7 +30,10 @@ public class ProgramHeader {
     public long p_flags;    // Elf32_Word   flags
     public long p_align;    // Elf32_Word   memory alignment
 
-    public static ProgramHeader parserFrom(SectionStreamer s) {
+    // detail
+    public String interp;
+
+    public static ProgramHeader parserFrom(ElfStreamer s) {
         ProgramHeader ph = new ProgramHeader();
         ph.p_type = s.readElf32Word();
         ph.p_offset = s.readElf32Off();
@@ -48,6 +51,7 @@ public class ProgramHeader {
         StringBuilder builder = new StringBuilder();
         String form = "%-12s\t%s\n";
         String type;
+        // basic
         switch ((int)p_type) {
             case PT_NULL: type = "PT_NULL"; break;
             case PT_LOAD: type = "PT_LOAD"; break;
@@ -58,7 +62,7 @@ public class ProgramHeader {
             case PT_PHDR: type = "PT_PHDR"; break;
             case PT_LOPROC: type = "PT_LOPROC"; break;
             case PT_HIPROC: type = "PT_HIPROC"; break;
-            default: type = "unknown";
+            default: type = "PT_LOPROC ~ PT_HIPROC"; break;
         }
         builder.append(String.format(form, "p_type", PrintUtil.hex4(p_type) + "\t" + type));
         builder.append(String.format(form, "p_offset", PrintUtil.hex4(p_offset)));
@@ -68,8 +72,27 @@ public class ProgramHeader {
         builder.append(String.format(form, "p_memsz", PrintUtil.hex4(p_memsz)));
         builder.append(String.format(form, "p_flags", PrintUtil.hex4(p_flags)));
         builder.append(String.format(form, "p_align", PrintUtil.hex4(p_align)));
-        builder.append('\n');
 
+        // detail
+        String content;
+        switch ((int) p_type) {
+            case PT_INTERP: content = interp; break;
+            default: content = "";
+        }
+        builder.append(String.format(form, type, content));
+
+        builder.append('\n');
         return builder.toString();
+    }
+
+    public void fillDetail(ElfStreamer s) {
+        if (p_type == PT_INTERP) {
+            StringBuilder builder = new StringBuilder();
+            byte[] r;
+            while ((r = s.read(1)) != null && r[0] != 0) {
+                builder.append((char)r[0]);
+            }
+            interp = builder.toString();
+        }
     }
 }

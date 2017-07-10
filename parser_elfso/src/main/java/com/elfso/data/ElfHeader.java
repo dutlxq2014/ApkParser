@@ -1,7 +1,7 @@
 package com.elfso.data;
 
 import com.common.PrintUtil;
-import com.elfso.stream.SectionStreamer;
+import com.elfso.stream.ElfStreamer;
 
 /**
  *
@@ -60,7 +60,7 @@ public class ElfHeader {
     public int e_shnum;         // 30h Elf32_Half   number of section header entries
     public int e_shstrndx;      // 32h Elf32_Half   section header table's section header string table entry offset
 
-    public static ElfHeader parseFrom(SectionStreamer s) {
+    public static ElfHeader parseFrom(ElfStreamer s) {
         ElfHeader header = new ElfHeader();
         header.e_indent = Eident.parseFrom(s.read(Eident.EI_NIDENT));
         header.e_type = s.readElf32Half();

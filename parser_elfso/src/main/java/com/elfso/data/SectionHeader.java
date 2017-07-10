@@ -1,7 +1,7 @@
 package com.elfso.data;
 
 import com.common.PrintUtil;
-import com.elfso.stream.SectionStreamer;
+import com.elfso.stream.ElfStreamer;
 
 /**
  *
@@ -36,6 +36,7 @@ public class SectionHeader {
     public static final int SHT_HIPROC = 0x7FFFFFFF;
     public static final int SHT_LOUSER = 0x80000000;
     public static final int SHT_HIUSER = 0X8FFFFFFF;
+    public static final int SHT_INTERP = 0x1b;  // add
 
     // sh_flags
     public static final int SHF_WRITE = 0x1;    // mask
@@ -56,10 +57,10 @@ public class SectionHeader {
     public long sh_addralign;   // Elf32_Word
     public long sh_entsize;     // Elf32_Word
 
-    // fill info
+    // detail
     public String _sh_name;
 
-    public static SectionHeader parseFrom(SectionStreamer s) {
+    public static SectionHeader parseFrom(ElfStreamer s) {
         SectionHeader h = new SectionHeader();
         h.sh_name = s.readElf32Word();
         h.sh_type = s.readElf32Word();
@@ -99,7 +100,8 @@ public class SectionHeader {
             case SHT_HIPROC: type = "SHT_HIPROC"; break;
             case SHT_LOUSER: type = "SHT_LOUSER"; break;
             case SHT_HIUSER: type = "SHT_HIUSER"; break;
-            default: type = "unknow";
+            case SHT_INTERP: type = "SHT_INTERP"; break;
+            default: type = "unknown";
         }
         builder.append(String.format(form, "sh_type", PrintUtil.hex4(sh_type) + "\t" + type));
         builder.append(String.format(form, "sh_flags", PrintUtil.hex4(sh_flags)));

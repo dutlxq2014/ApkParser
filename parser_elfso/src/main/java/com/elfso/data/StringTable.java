@@ -1,6 +1,6 @@
 package com.elfso.data;
 
-import com.elfso.stream.SectionStreamer;
+import com.elfso.stream.ElfStreamer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class StringTable {
     public String[] strs;
     public byte[] strBytes;
 
-    public static StringTable parseFrom(SectionStreamer s) {
+    public static StringTable parseFrom(ElfStreamer s) {
         int len = s.length();
         StringTable strTab = new StringTable();
         strTab.strBytes = new byte[len];

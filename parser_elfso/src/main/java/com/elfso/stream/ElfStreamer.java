@@ -8,12 +8,12 @@ import com.common.LogUtil;
  * Created by xueqiulxq on 07/07/2017.
  */
 
-public abstract class SectionStreamer {
+public abstract class ElfStreamer {
 
     private byte[] mData = new byte[8];
     private int cursor = 0;
 
-    public SectionStreamer() {
+    public ElfStreamer() {
     }
 
     public void use(byte[] data) {
