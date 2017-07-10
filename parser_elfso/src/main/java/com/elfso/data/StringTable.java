@@ -40,7 +40,21 @@ public class StringTable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for (int i=0; i<strs.length; ++i) {
-            builder.append(i).append(": ").append(strs[i]);
+            builder.append(i).append(":").append(strs[i]).append("  ");
+        }
+        return builder.toString();
+    }
+
+    public String get(int idx) {
+        StringBuilder builder = new StringBuilder();
+        if (strBytes != null && idx < strBytes.length) {
+            for (int i=idx; i<strBytes.length; ++i) {
+                if (strBytes[i] != 0) {
+                    builder.append((char)strBytes[i]);
+                } else {
+                    break;
+                }
+            }
         }
         return builder.toString();
     }

@@ -21,9 +21,9 @@ public class ElfFile {
     // Sections
     public Eident eident;
     public ElfHeader elfHeader;
-    public ProgramHeader programHeader;
+    public ProgramHeader[] programHeaders;
     public SectionHeader[] sectionHeaders;
-    public StringTable stringTable;
+    public StringTable shStringTable;
 
     public ElfFile() {
 
@@ -45,22 +45,31 @@ public class ElfFile {
 
         // header
         elfHeader = parseHeader(racFile);
-        System.out.println(elfHeader);
 
         // Program header
+        programHeaders = parseProgramHeader(racFile);
 
         // Section header
         sectionHeaders = parseSectionHeaders(racFile);
+
+        // String table
+        shStringTable = parseShStringTable(racFile);
+
+        completeElfDetails();
+
+        // Print
+        System.out.println(elfHeader);
+        for (int i=0; i<programHeaders.length; ++i) {
+            System.out.println("Program header-" + i);
+            System.out.println(programHeaders[i]);
+        }
         for (int i=0; i<sectionHeaders.length; ++i) {
             System.out.println("Section header-" + i);
             System.out.print(sectionHeaders[i]);
         }
+        System.out.println(shStringTable);
 
-        // String table
-        StringTable shstrTable = parseStringTable(racFile);
-        System.out.println(shstrTable);
-
-        LogUtil.i("Parse end!");
+        LogUtil.i("\nParse end!");
     }
 
     private Eident parseIdent(RandomAccessFile racFile) throws IOException {
@@ -84,14 +93,27 @@ public class ElfFile {
         return header;
     }
 
-    private ProgramHeader parseProgramHeader(RandomAccessFile racFile) throws IOException {
+    private ProgramHeader[] parseProgramHeader(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
         racFile.seek(0);
+        long offset = elfHeader.e_phoff;
+        int entSize = elfHeader.e_phentsize;
+        int num = elfHeader.e_phnum;
+
+        byte[] bytes = new byte[entSize * num];
+        racFile.seek(offset);
+        racFile.read(bytes, 0, bytes.length);
+        mStreamer.use(bytes);
+
+        ProgramHeader[] phs = new ProgramHeader[num];
+        for (int i=0; i<num; ++i) {
+            phs[i] = ProgramHeader.parserFrom(mStreamer);
+        }
         racFile.seek(old);
-        return null;
+        return phs;
     }
 
-    private StringTable parseStringTable(RandomAccessFile racFile) throws IOException {
+    private StringTable parseShStringTable(RandomAccessFile racFile) throws IOException {
         long old = racFile.getFilePointer();
         racFile.seek(0);
         int ndx = elfHeader.e_shstrndx;
@@ -123,5 +145,11 @@ public class ElfFile {
         }
         racFile.seek(old);
         return shs;
+    }
+
+    private void completeElfDetails() {
+        for (SectionHeader sh : sectionHeaders) {
+            sh.fillDetail(shStringTable);
+        }
     }
 }

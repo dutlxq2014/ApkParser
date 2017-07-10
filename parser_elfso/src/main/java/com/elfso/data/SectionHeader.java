@@ -56,6 +56,9 @@ public class SectionHeader {
     public long sh_addralign;   // Elf32_Word
     public long sh_entsize;     // Elf32_Word
 
+    // fill info
+    public String _sh_name;
+
     public static SectionHeader parseFrom(SectionStreamer s) {
         SectionHeader h = new SectionHeader();
         h.sh_name = s.readElf32Word();
@@ -75,6 +78,7 @@ public class SectionHeader {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String form = "%-12s\t%s\n";
+        builder.append(String.format(form, "_sh_name", _sh_name));
         builder.append(String.format(form, "sh_name", PrintUtil.hex4(sh_name)));
         String type;
         switch ((int)sh_type) {
@@ -109,5 +113,9 @@ public class SectionHeader {
 
         builder.append('\n');
         return builder.toString();
+    }
+
+    public void fillDetail(StringTable table) {
+        _sh_name = table.get((int)sh_name);
     }
 }
