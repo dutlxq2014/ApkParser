@@ -1,0 +1,112 @@
+package com.common.stream;
+
+import com.common.LogUtil;
+
+/**
+ *
+ * Created by xueqiulxq on 16/07/2017.
+ */
+
+public class BaseStreamer {
+
+    public enum Endian {
+        Little, Big
+    }
+
+    private byte[] mData = new byte[8];
+    private int cursor = 0;
+
+    public BaseStreamer() {
+    }
+
+    public void use(byte[] data) {
+        mData = data;
+        cursor = 0;
+    }
+
+    public int length() {
+        return mData != null ? mData.length : 0;
+    }
+
+    public byte[] read(int len) {
+        if (cursor >= mData.length) {
+            LogUtil.e("Stream has end!!");
+            return null;
+        }
+        if (cursor + len > mData.length) {
+            LogUtil.e(String.format("Cannot read %d bytes with only %d remains. Return %bytes!",
+                    len, mData.length - cursor, mData.length - cursor));
+            len = mData.length - cursor;
+        }
+        byte[] ret = new byte[len];
+        System.arraycopy(mData, cursor, ret, 0, len);
+        cursor += len;
+        return ret;
+    }
+
+    public long readUnsignedInt(Endian endian) {
+        byte[] buf = read(4);
+        long ret = 0;
+        if (endian == Endian.Little) {
+            for (int i=3; i>=0; --i) {
+                ret <<= 8;
+                ret |= (buf[i] & 0xff);
+            }
+        } else {
+            for (int i=0; i<=4; ++i) {
+                ret <<= 8;
+                ret |= (buf[i] & 0xff);
+            }
+        }
+        return ret;
+    }
+
+    public int readSignedInt(Endian endian) {
+        byte[] buf = read(4);
+        int ret = 0;
+        if (endian == Endian.Little) {
+            for (int i=3; i>=0; --i) {
+                ret <<= 8;
+                ret |= (buf[i] & 0xff);
+            }
+        } else {
+            for (int i=0; i<=4; ++i) {
+                ret <<= 8;
+                ret |= (buf[i] & 0xff);
+            }
+        }
+        return ret;
+    }
+
+    public int readUnsignedShort(Endian endian) {
+        byte[] buf = read(2);
+        if (endian == Endian.Little) {
+            return (buf[1] & 0xff) << 8 | (buf[0] & 0xff);
+        } else {
+            return (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
+        }
+    }
+
+    public int readSignedShort(Endian endian) {
+        byte[] buf = read(2);
+        if (endian == Endian.Little) {
+            return (buf[1] & 0xff) << 8 | (buf[0] & 0xff);
+        } else {
+            return (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
+        }
+    }
+
+    public char readChar8(Endian endian) {
+        byte[] buf = read(1);
+        return (char) buf[0];
+    }
+
+    public char readChar16(Endian endian) {
+        byte[] buf = read(2);
+        if (endian == Endian.Little) {
+            return (char) buf[0];
+        } else {
+            return (char) buf[1];
+        }
+    }
+}

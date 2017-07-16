@@ -14,52 +14,31 @@ public class LittleEndianStreamer extends ElfStreamer {
 
     @Override
     public long readElf32Addr() {
-        byte[] buf = read(4);
-        long ret = 0;
-        for (int i=3; i>=0; --i) {
-            ret <<= 8;
-            ret |= (buf[i] & 0xff);
-        }
-        return ret;
+        return super.readUnsignedInt(Endian.Little);
     }
 
     @Override
     public int readElf32Half() {
-        byte[] buf = read(2);
-        return (buf[1] << 8 | buf[0]) & 0x0000ffff;
+        return super.readUnsignedShort(Endian.Little);
     }
 
     @Override
     public long readElf32Off() {
-        byte[] buf = read(4);
-        long ret = 0;
-        for (int i=3; i>=0; --i) {
-            ret <<= 8;
-            ret |= (buf[i] & 0xff);
-        }
-        return ret;
+        return super.readUnsignedInt(Endian.Little);
     }
 
     @Override
     public int readElf32Sword() {
-        byte[] buf = read(4);
-        return buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
+        return super.readSignedInt(Endian.Little);
     }
 
     @Override
     public long readElf32Word() {
-        byte[] buf = read(4);
-        long ret = 0;
-        for (int i=3; i>=0; --i) {
-            ret <<= 8;
-            ret |= (buf[i] & 0xff);
-        }
-        return ret;
+        return super.readUnsignedInt(Endian.Little);
     }
 
     @Override
-    public byte readUChar() {
-        return read(1)[0];
+    public char readUChar() {
+        return super.readChar8(Endian.Little);
     }
-
 }

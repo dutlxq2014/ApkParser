@@ -1,44 +1,17 @@
 package com.elfso.stream;
 
 
-import com.common.LogUtil;
+import com.common.stream.BaseStreamer;
 
 /**
  *
  * Created by xueqiulxq on 07/07/2017.
  */
 
-public abstract class ElfStreamer {
-
-    private byte[] mData = new byte[8];
-    private int cursor = 0;
+public abstract class ElfStreamer extends BaseStreamer {
 
     public ElfStreamer() {
-    }
-
-    public void use(byte[] data) {
-        cursor = 0;
-        mData = data;
-    }
-
-    public int length() {
-        return mData != null ? mData.length : 0;
-    }
-
-    public byte[] read(int len) {
-        if (cursor >= mData.length) {
-            LogUtil.e("Stream has end!!");
-            return null;
-        }
-        if (cursor + len > mData.length) {
-            LogUtil.e(String.format("Cannot read %d bytes with only %d remains. Return %bytes!",
-                    len, mData.length - cursor, mData.length - cursor));
-            len = mData.length - cursor;
-        }
-        byte[] ret = new byte[len];
-        System.arraycopy(mData, cursor, ret, 0, len);
-        cursor += len;
-        return ret;
+        super();
     }
 
     // unsigned int addr 4byte
@@ -57,5 +30,5 @@ public abstract class ElfStreamer {
     public abstract long readElf32Word();
 
     // unsinged char 1byte
-    public abstract byte readUChar();
+    public abstract char readUChar();
 }
