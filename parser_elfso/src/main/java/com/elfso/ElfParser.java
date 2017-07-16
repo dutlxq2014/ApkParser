@@ -1,6 +1,7 @@
 package com.elfso;
 
 import com.common.FileUtil;
+import com.common.LogUtil;
 import com.elf.excep.FormatException;
 import com.elfso.data.ElfFile;
 
@@ -11,34 +12,35 @@ import java.io.RandomAccessFile;
 
 public class ElfParser {
 
-    public ElfFile parse(RandomAccessFile racFile) {
-        if (racFile == null) {
-            return null;
-        }
+    public ElfFile parse(String soFile) {
+        RandomAccessFile racFile = null;
         try {
+            racFile = FileUtil.loadAsRAF(soFile);
             ElfFile elf = new ElfFile();
             elf.parse(racFile);
             return elf;
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (FormatException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            FileUtil.closeQuietly(racFile);
         }
         return null;
     }
 
     public static void main(String[] args) {
 
-        RandomAccessFile raf = null;
-        try {
-            raf = FileUtil.loadAsRAF("parser_elfso/res/libhello-jni.so");
-//            raf = FileUtil.loadAsRAF("parser_elfso/res/libjiagu.so");
-            ElfFile elfFile = new ElfParser().parse(raf);
-            System.out.println(elfFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        String soFile = "parser_elfso/res/libhello-jni.so";
+        //String soFile = "parser_elfso/res/libjiagu.so";
+        ElfParser parser = new ElfParser();
+        ElfFile elfFile = parser.parse(soFile);
+        if (elfFile != null) {
+            LogUtil.i(elfFile.toString());
+        } else {
+            LogUtil.e("Parse failed: " + soFile);
         }
-        FileUtil.closeQuietly(raf);
-
     }
 }

@@ -39,8 +39,9 @@ public class StringTable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("String table:\n");
         for (int i=0; i<strs.length; ++i) {
-            builder.append(i).append(":").append(strs[i]).append("  ");
+            builder.append(i).append(":").append(strs[i]).append('\n');
         }
         return builder.toString();
     }
