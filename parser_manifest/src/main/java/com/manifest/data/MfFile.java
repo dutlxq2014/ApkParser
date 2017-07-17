@@ -56,11 +56,11 @@ public class MfFile {
             switch ((int)info.chunkType) {
                 case STRING_CHUNK_ID:
                     chunkType = STRING_CHUNK_TYPE;
-                    stringChunk = parseStringChunk(info, chunkBytes);
+                    stringChunk = parseStringChunk(chunkBytes);
                     break;
                 case RESOURCE_ID_CHUNK_ID:
                     chunkType = RESOURCE_ID_CHUNK_TYPE;
-                    resourceIdChunk = null;
+                    resourceIdChunk = parseResourceIdChunk(chunkBytes);
                     break;
                 case START_NAMESPACE_CHUNK_ID:
                     chunkType = START_NAMESPACE_CHUNK_TYPE;
@@ -80,6 +80,7 @@ public class MfFile {
         StringBuilder builder = new StringBuilder(4096);
         builder.append(header).append('\n');
         builder.append(stringChunk).append('\n');
+        builder.append(resourceIdChunk).append('\n');
         return builder.toString();
     }
 
@@ -88,10 +89,13 @@ public class MfFile {
         return MfHeader.parseFrom(mStreamer);
     }
 
-    public StringChunk parseStringChunk(ChunkInfo info, byte[] chunkData) throws IOException {
+    public StringChunk parseStringChunk(byte[] chunkData) throws IOException {
         mStreamer.use(chunkData);
-        StringChunk chunk = StringChunk.parseFrom(mStreamer);
-        return chunk;
+        return StringChunk.parseFrom(mStreamer);
     }
 
+    public ResourceIdChunk parseResourceIdChunk(byte[] chunkData) throws IOException {
+        mStreamer.use(chunkData);
+        return ResourceIdChunk.parseFrom(mStreamer);
+    }
 }
