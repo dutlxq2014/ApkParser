@@ -25,6 +25,7 @@ public class MfHeader {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("-- File Header --").append('\n');
         builder.append("Magic Number: ").append(PrintUtil.hex4(magicNumber)).append('\n');
         builder.append("File Length: ").append(PrintUtil.hex4(fileLength)).append('\n');
         return builder.toString();

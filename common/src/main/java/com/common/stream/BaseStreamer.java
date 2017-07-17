@@ -28,14 +28,21 @@ public class BaseStreamer {
         return mData != null ? mData.length : 0;
     }
 
+    /**
+     * If len > 0 read len bytes else if len < 0 read to the end.
+     * @param len length of bytes to read
+     * @return byte array
+     */
     public byte[] read(int len) {
         if (cursor >= mData.length) {
-            LogUtil.e("Stream has end!!");
+            LogUtil.e("Stream has finished!!");
             return null;
         }
         if (cursor + len > mData.length) {
             LogUtil.e(String.format("Cannot read %d bytes with only %d remains. Return %bytes!",
                     len, mData.length - cursor, mData.length - cursor));
+            len = mData.length - cursor;
+        } else if (len < 0) {
             len = mData.length - cursor;
         }
         byte[] ret = new byte[len];
@@ -44,7 +51,7 @@ public class BaseStreamer {
         return ret;
     }
 
-    public long readUnsignedInt(Endian endian) {
+    protected long readUnsignedInt(Endian endian) {
         byte[] buf = read(4);
         long ret = 0;
         if (endian == Endian.Little) {
@@ -61,7 +68,7 @@ public class BaseStreamer {
         return ret;
     }
 
-    public int readSignedInt(Endian endian) {
+    protected int readSignedInt(Endian endian) {
         byte[] buf = read(4);
         int ret = 0;
         if (endian == Endian.Little) {
@@ -78,7 +85,7 @@ public class BaseStreamer {
         return ret;
     }
 
-    public int readUnsignedShort(Endian endian) {
+    protected int readUnsignedShort(Endian endian) {
         byte[] buf = read(2);
         if (endian == Endian.Little) {
             return (buf[1] & 0xff) << 8 | (buf[0] & 0xff);
@@ -87,7 +94,7 @@ public class BaseStreamer {
         }
     }
 
-    public int readSignedShort(Endian endian) {
+    protected int readSignedShort(Endian endian) {
         byte[] buf = read(2);
         if (endian == Endian.Little) {
             return (buf[1] & 0xff) << 8 | (buf[0] & 0xff);
@@ -96,12 +103,12 @@ public class BaseStreamer {
         }
     }
 
-    public char readChar8(Endian endian) {
+    protected char readChar8(Endian endian) {
         byte[] buf = read(1);
         return (char) buf[0];
     }
 
-    public char readChar16(Endian endian) {
+    protected char readChar16(Endian endian) {
         byte[] buf = read(2);
         if (endian == Endian.Little) {
             return (char) buf[0];
