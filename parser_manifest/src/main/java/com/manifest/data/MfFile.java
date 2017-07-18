@@ -5,7 +5,6 @@ import com.common.PrintUtil;
 import com.manifest.stream.LittleEndianStreamer;
 import com.manifest.stream.MfStreamer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -20,7 +19,7 @@ public class MfFile {
     private static final String RESOURCE_ID_CHUNK_TYPE = "ResourceIdChunk";
     private static final String START_NAMESPACE_CHUNK_TYPE = "StartNamespaceChunk";
     private static final String START_TAG_CHUNK_TYPE = "StartTagChunk";
-    private static final String UNKNOWN_CHUNK_TYPE = "Unknown";
+    private static final String UNKNOWN_CHUNK_TYPE = "UnknownChunk";
     public static final int STRING_CHUNK_ID = 0x001C0001;
     public static final int RESOURCE_ID_CHUNK_ID = 0x00080180;
     public static final int START_NAMESPACE_CHUNK_ID = 0x00100100;
@@ -52,7 +51,7 @@ public class MfFile {
             byte[] chunkBytes = new byte[(int)info.chunkSize];
             System.arraycopy(infoBytes, 0, chunkBytes, 0, ChunkInfo.LENGTH);
             cursor += racFile.read(chunkBytes, ChunkInfo.LENGTH, (int)info.chunkSize - ChunkInfo.LENGTH);
-            String chunkType = "UnknownChunk";
+            String chunkType = UNKNOWN_CHUNK_TYPE;
             switch ((int)info.chunkType) {
                 case STRING_CHUNK_ID:
                     chunkType = STRING_CHUNK_TYPE;
@@ -64,7 +63,7 @@ public class MfFile {
                     break;
                 case START_NAMESPACE_CHUNK_ID:
                     chunkType = START_NAMESPACE_CHUNK_TYPE;
-                    startNamespaceChunk = null;
+                    startNamespaceChunk = parseStartNamespaceChunk(chunkBytes);
                     break;
                 case START_TAG_CHUNK_ID:
                     startTagChunk = null;
@@ -81,6 +80,7 @@ public class MfFile {
         builder.append(header).append('\n');
         builder.append(stringChunk).append('\n');
         builder.append(resourceIdChunk).append('\n');
+        builder.append(startNamespaceChunk).append('\n');
         return builder.toString();
     }
 
@@ -97,5 +97,10 @@ public class MfFile {
     public ResourceIdChunk parseResourceIdChunk(byte[] chunkData) throws IOException {
         mStreamer.use(chunkData);
         return ResourceIdChunk.parseFrom(mStreamer);
+    }
+
+    public StartNamespaceChunk parseStartNamespaceChunk(byte[] chunkData) {
+        mStreamer.use(chunkData);
+        return StartNamespaceChunk.parseFrom(mStreamer, stringChunk);
     }
 }

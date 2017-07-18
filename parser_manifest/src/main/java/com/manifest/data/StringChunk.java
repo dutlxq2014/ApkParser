@@ -71,6 +71,14 @@ public class StringChunk {
         return chunk;
     }
 
+    public String getString(int index) {
+        return index >= 0 && index < strings.length ? strings[index] : null;
+    }
+
+    public String getStyle(int index) {
+        return index >= 0 && index < styles.length ? styles[index] : null;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(1024);
