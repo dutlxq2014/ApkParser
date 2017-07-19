@@ -26,7 +26,7 @@ public class ManifestParser {
 
     public static final void main(String[] args) {
 
-        String fileName = "parser_manifest/res/DemoManifest.xml";
+        String fileName = "parser_manifest/res/compiled_manifest.xml";
         ManifestParser parser = new ManifestParser();
         MfFile mfFile = parser.parse(fileName);
         if (mfFile != null) {
