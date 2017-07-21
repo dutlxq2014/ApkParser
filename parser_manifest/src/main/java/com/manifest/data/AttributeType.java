@@ -14,10 +14,10 @@ public class AttributeType {
 //        if (entry.data == ATTR_STRING) {
 //
 //        }
-        return "--" + entry.type;
+        return "--0x" + PrintUtil.hex4(entry.type);
     }
 
     public static String getAttributeData(AttributeEntry entry) {
-        return "--" + PrintUtil.hex4(entry.data);
+        return "--0x" + PrintUtil.hex4(entry.data);
     }
 }
