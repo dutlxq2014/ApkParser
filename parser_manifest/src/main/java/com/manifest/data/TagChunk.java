@@ -17,5 +17,4 @@ public class TagChunk {
     // Assistant
     public String nameSpaceUriStr;
     public String nameStr;
-    public int chunkIdx;        // Which index does this chunk appeared in the source file.
 }
