@@ -11,22 +11,12 @@ import java.util.List;
  * Created by xueqiulxq on 17/07/2017.
  */
 
-public class StartTagChunk {
+public class StartTagChunk extends TagChunk {
 
-    public long chunkType;
-    public long chunkSize;
-    public long lineNumber;
-    public long unknown;
-    public long nameSpaceUri;
-    public long name;           // Tag name index
     public long flags;          // Flags indicating start tag or end tag.
     public long attributeCount; // Count of attributes in tag
     public long classAttribute;
     public List<AttributeEntry> attributes;
-
-    // Assistant
-    public String nameSpaceUriStr;
-    public String nameStr;
 
     public static StartTagChunk parseFrom(MfStreamer s, StringChunk stringChunk) {
         StartTagChunk chunk = new StartTagChunk();

@@ -25,12 +25,15 @@ public class ManifestParser {
             System.out.println("Parse failed: " + fileName);
         }
 
+        System.out.println("Results:");
         // Dump raw chunks to build directory
         try {
-            FileOutputStream fos = new FileOutputStream(OUTPUT_DIR + "raw_chunks.txt");
+            String targetFile = OUTPUT_DIR + "raw_chunks.txt";
+            FileOutputStream fos = new FileOutputStream(targetFile);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
             writer.write(mfFile.toString());
             writer.close();
+            System.out.println("Raw chunk: " + targetFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -39,10 +42,12 @@ public class ManifestParser {
 
         // Dump format xml to build director
         try {
-            FileOutputStream fos = new FileOutputStream(OUTPUT_DIR + "format_mf.xml");
+            String targetFile = OUTPUT_DIR + "parsed_mf.xml";
+            FileOutputStream fos = new FileOutputStream(targetFile);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-            writer.write(mfFile.toString());
+            writer.write(mfFile.toXmlString());
             writer.close();
+            System.out.println("Xml file: " + targetFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

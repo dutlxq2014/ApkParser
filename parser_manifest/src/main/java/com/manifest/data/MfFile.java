@@ -36,10 +36,12 @@ public class MfFile {
     public StartNamespaceChunk startNamespaceChunk;
     public List<StartTagChunk> startTagChunks;
     public List<EndTagChunk> endTagChunks;
+    public List<TagChunk> tagChunks;
 
     public MfFile() {
         startTagChunks = new ArrayList<StartTagChunk>();
         endTagChunks = new ArrayList<EndTagChunk>();
+        tagChunks = new ArrayList<TagChunk>();
     }
 
     public void parse(RandomAccessFile racFile) throws IOException {
@@ -61,7 +63,9 @@ public class MfFile {
             byte[] chunkBytes = new byte[(int)info.chunkSize];
             System.arraycopy(infoBytes, 0, chunkBytes, 0, ChunkInfo.LENGTH);
             cursor += racFile.read(chunkBytes, ChunkInfo.LENGTH, (int)info.chunkSize - ChunkInfo.LENGTH);
-            String chunkType = UNKNOWN_CHUNK_TYPE;
+            String chunkType;
+            StartTagChunk startTagChunk;
+            EndTagChunk endTagChunk;
             switch ((int)info.chunkType) {
                 case STRING_CHUNK_ID:
                     chunkType = STRING_CHUNK_TYPE;
@@ -76,12 +80,19 @@ public class MfFile {
                     startNamespaceChunk = parseStartNamespaceChunk(chunkBytes);
                     break;
                 case START_TAG_CHUNK_ID:
-                    startTagChunks.add(parseStartTagChunk(chunkBytes));
                     chunkType = START_TAG_CHUNK_TYPE;
+                    startTagChunk = parseStartTagChunk(chunkBytes);
+                    startTagChunks.add(startTagChunk);
+                    tagChunks.add(startTagChunk);
                     break;
                 case EDN_TAG_CHUNK_ID:
-                    endTagChunks.add(parseEndTagChunk(chunkBytes));
                     chunkType = END_TAG_CHUNK_TYPE;
+                    endTagChunk = parseEndTagChunk(chunkBytes);
+                    endTagChunks.add(endTagChunk);
+                    tagChunks.add(endTagChunk);
+                    break;
+                default:
+                    chunkType = UNKNOWN_CHUNK_TYPE;
             }
             LogUtil.i(String.format("%s %s", PrintUtil.hex4(info.chunkType), chunkType));
         } while (cursor < header.fileLength);
@@ -107,6 +118,11 @@ public class MfFile {
         }
         return builder.toString();
     }
+
+    public String toXmlString() {
+        return "xml";
+    }
+
 
     public MfHeader parseHeader(byte[] data) throws IOException {
         mStreamer.use(data);

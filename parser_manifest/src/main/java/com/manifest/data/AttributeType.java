@@ -1,6 +1,5 @@
 package com.manifest.data;
 
-import com.common.PrintUtil;
 
 /**
  *
@@ -103,7 +102,7 @@ public class AttributeType {
         } else if (entry.type == TYPE_INT_COLOR_RGB4) {
             attrData = String.format("#f%03x", 0x0fff & entry.data);
         } else {
-            attrData = "TYPE_UNKNOWN";
+            attrData = String.format("<0x%08x, type 0x%08x>", entry.data, entry.type);
         }
 
         return attrData;

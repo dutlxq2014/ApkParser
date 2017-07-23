@@ -8,18 +8,7 @@ import com.manifest.stream.MfStreamer;
  * Created by xueqiulxq on 19/07/2017.
  */
 
-public class EndTagChunk {
-
-    public long chunkType;
-    public long chunkSize;
-    public long lineNumber;
-    public long unknown;
-    public long nameSpaceUri;
-    public long name;           // Tag name index
-
-    // Assistant
-    public String nameSpaceUriStr;
-    public String nameStr;
+public class EndTagChunk extends TagChunk {
 
     public static EndTagChunk parseFrom(MfStreamer s, StringChunk stringChunk) {
         EndTagChunk chunk = new EndTagChunk();
