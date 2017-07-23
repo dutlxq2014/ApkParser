@@ -75,6 +75,10 @@ public class StringChunk {
         return index >= 0 && index < strings.length ? strings[index] : null;
     }
 
+    public String getString(long index) {
+        return index >=0 && index < strings.length ? strings[(int) index] : null;
+    }
+
     public String getStyle(int index) {
         return index >= 0 && index < styles.length ? styles[index] : null;
     }

@@ -4,6 +4,7 @@ import com.common.PrintUtil;
 import com.manifest.stream.MfStreamer;
 
 /**
+ *
  * Created by xueqiulxq on 19/07/2017.
  */
 
@@ -34,7 +35,7 @@ public class AttributeEntry {
         entry.nameStr = stringChunk.getString((int) entry.name);
         entry.valueStringStr = stringChunk.getString((int) entry.valueString);
         entry.typeStr = AttributeType.getAttributeType(entry);
-        entry.dataStr = AttributeType.getAttributeData(entry);
+        entry.dataStr = AttributeType.getAttributeData(entry, stringChunk);
         return entry;
     }
 
