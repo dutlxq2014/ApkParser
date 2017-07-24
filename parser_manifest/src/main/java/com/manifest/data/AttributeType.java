@@ -73,9 +73,9 @@ public class AttributeType {
     public static String getAttributeData(AttributeEntry entry, StringChunk stringChunk) {
         String attrData;
         if (entry.type == TYPE_REFERENCE) {
-            attrData = String.format("@%s/%08x", getPackage(entry.data), entry.data);
+            attrData = String.format("@%s/0x%08x", getPackage(entry.data), entry.data);
         } else if (entry.type == TYPE_ATTRIBUTE) {
-            attrData = String.format("?%s/%08x", getPackage(entry.data), entry.data);
+            attrData = String.format("?%s/0x%08x", getPackage(entry.data), entry.data);
         } else if (entry.type == TYPE_STRING) {
             attrData = stringChunk.getString(entry.data);
         } else if (entry.type == TYPE_FLOAT) {
@@ -141,6 +141,6 @@ public class AttributeType {
     }
 
     private static String getPackage(long data) {
-        return "(package)";
+        return "ref";
     }
 }
