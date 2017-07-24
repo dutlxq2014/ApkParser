@@ -111,9 +111,9 @@ public class BaseStreamer {
     protected char readChar16(Endian endian) {
         byte[] buf = read(2);
         if (endian == Endian.Little) {
-            return (char) ((buf[1] & 0xff) << 8 | buf[0]);
+            return (char) ((buf[1] & 0xff) << 8 | (buf[0] & 0xff));
         } else {
-            return (char) ((buf[0] & 0xff) << 8 | buf[1]);
+            return (char) ((buf[0] & 0xff) << 8 | (buf[1] & 0xff));
         }
     }
 }
