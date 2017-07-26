@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -20,5 +21,16 @@ public class ChunkHeader {
         chunk.headerSize = s.readUShort();
         chunk.chunkSize = s.readUInt();
         return chunk;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String form = "%-16s %s\n";
+
+        builder.append(String.format(form, "type", PrintUtil.hex2(type)));
+        builder.append(String.format(form, "headerSize", PrintUtil.hex2(headerSize)));
+        builder.append(String.format(form, "chunkSize", PrintUtil.hex4(chunkSize)));
+        return builder.toString();
     }
 }
