@@ -16,12 +16,14 @@ public class ResStringPoolChunk {
     private static final int SORTED_FLAG = 1 << 0;
     private static final int UTF8_FLAG = 1 << 8;
 
+    // Header Block 0x001c
     public ChunkHeader header;
     public long stringCount;
     public long styleCount;
     public long flags;
     public long stringsStart;           // Offset from this chunk starting.
     public long stylesStart;
+    // Data Block
     public long stringOffsetArray[];    // Offset from string pool. The first one is 0x00000000
     public long styleOffsetArray[];
     public List<String> strings;
@@ -36,6 +38,7 @@ public class ResStringPoolChunk {
         chunk.flags = s.readUInt();
         chunk.stringsStart = s.readUInt();
         chunk.stylesStart = s.readUInt();
+
         long[] strOffsets = chunk.stringOffsetArray = new long[(int) chunk.stringCount];
         long[] styleOffsets = chunk.styleOffsetArray = new long[(int) chunk.styleCount];
         List<String> strings = chunk.strings = new ArrayList<String>((int) chunk.stringCount);
@@ -53,7 +56,9 @@ public class ResStringPoolChunk {
             strings.add(str);
         }
         for (int i=0; i<chunk.styleCount; ++i) {
-
+            int len = (s.readUShort() & 0x7f00) >> 8;
+            String str = s.readNullEndString(len + 1); // The last byte is 0x00
+            styles.add(str);
         }
 
         return chunk;
@@ -96,11 +101,11 @@ public class ResStringPoolChunk {
         }
 
         builder.append(String.format("\nStringPool Content: %d\n", stringCount));
-        for (int i=0; i<stringCount; ++i) {
-            builder.append(String.format("0x%x: ", i+1)).append(strings.get(i)).append('\n');
+        for (int i=0; i<strings.size(); ++i) {
+            builder.append(String.format("0x%x: ", i)).append(strings.get(i)).append('\n');
         }
         builder.append(String.format("\nStylePools Content: %d\n", styleCount));
-        for (int i=0; i<styleCount; ++i) {
+        for (int i=0; i<styles.size(); ++i) {
             builder.append(styles.get(i)).append("\n");
         }
 

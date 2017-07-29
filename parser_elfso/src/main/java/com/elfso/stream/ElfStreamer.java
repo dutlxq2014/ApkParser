@@ -1,14 +1,14 @@
 package com.elfso.stream;
 
 
-import com.common.stream.BaseStreamer;
+import com.common.stream.RandomAccessStreamer;
 
 /**
  *
  * Created by xueqiulxq on 07/07/2017.
  */
 
-public abstract class ElfStreamer extends BaseStreamer {
+public abstract class ElfStreamer extends RandomAccessStreamer {
 
     public ElfStreamer() {
         super();

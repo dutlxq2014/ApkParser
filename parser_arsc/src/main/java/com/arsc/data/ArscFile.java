@@ -97,16 +97,16 @@ public class ArscFile {
 
     private ResTablePackageChunk parseTablePackageChunk(byte[] chunkBytes) {
         mStreamer.use(chunkBytes);
-        return ResTablePackageChunk.parseFrom(mStreamer);
+        return ResTablePackageChunk.parseFrom(mStreamer, resStringPoolChunk);
     }
 
     private ResTableTypeSpecChunk parseTableTypeSpecChunk(byte[] chunkBytes) {
         mStreamer.use(chunkBytes);
-        return ResTableTypeSpecChunk.parseFrom(mStreamer);
+        return ResTableTypeSpecChunk.parseFrom(mStreamer, resStringPoolChunk);
     }
 
     private ResTableTypeChunk parseTableTypeChunk(byte[] chunkBytes) {
         mStreamer.use(chunkBytes);
-        return ResTableTypeChunk.parseFrom(mStreamer);
+        return ResTableTypeChunk.parseFrom(mStreamer, resStringPoolChunk);
     }
 }

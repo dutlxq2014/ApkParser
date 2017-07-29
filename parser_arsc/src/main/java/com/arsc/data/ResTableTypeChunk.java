@@ -10,7 +10,7 @@ import com.arsc.stream.ArscStreamer;
 public class ResTableTypeChunk {
 
 
-    public static ResTableTypeChunk parseFrom(ArscStreamer s) {
+    public static ResTableTypeChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTableTypeChunk chunk = new ResTableTypeChunk();
         return chunk;
     }

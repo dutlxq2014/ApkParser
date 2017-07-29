@@ -7,7 +7,7 @@ import com.common.LogUtil;
  * Created by xueqiulxq on 16/07/2017.
  */
 
-public class BaseStreamer {
+public class RandomAccessStreamer {
 
     public enum Endian {
         Little, Big
@@ -16,7 +16,7 @@ public class BaseStreamer {
     private byte[] mData = new byte[8];
     private int cursor = 0;
 
-    public BaseStreamer() {
+    public RandomAccessStreamer() {
     }
 
     public void use(byte[] data) {
@@ -26,6 +26,30 @@ public class BaseStreamer {
 
     public int length() {
         return mData != null ? mData.length : 0;
+    }
+
+    public int skipBytes(int len) {
+        int newCursor = cursor + len;
+        if (newCursor > mData.length) {
+            newCursor = mData.length;
+        }
+        int skipNum = newCursor - cursor;
+        cursor = newCursor;
+        return skipNum;
+    }
+
+    public int getCursor() {
+        return cursor;
+    }
+
+    public void seek(long pos) {
+        if (pos < 0) {
+            cursor = 0;
+        } else if (pos > mData.length) {
+            cursor = mData.length;
+        } else {
+            cursor = (int) pos;
+        }
     }
 
     /**

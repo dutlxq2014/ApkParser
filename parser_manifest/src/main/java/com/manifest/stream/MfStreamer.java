@@ -1,13 +1,13 @@
 package com.manifest.stream;
 
-import com.common.stream.BaseStreamer;
+import com.common.stream.RandomAccessStreamer;
 
 /**
  *
  * Created by xueqiulxq on 16/07/2017.
  */
 
-public abstract class MfStreamer extends BaseStreamer {
+public abstract class MfStreamer extends RandomAccessStreamer {
 
     public MfStreamer() {
         super();
