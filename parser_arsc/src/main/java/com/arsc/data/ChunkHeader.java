@@ -33,4 +33,12 @@ public class ChunkHeader {
         builder.append(String.format(form, "chunkSize", PrintUtil.hex4(chunkSize)));
         return builder.toString();
     }
+
+    public String toRowString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("type=0x").append(PrintUtil.hex2(type)).append("  ")
+                .append("headerSize=0x").append(PrintUtil.hex2(headerSize)).append("  ")
+                .append("chunkSize=0x").append(PrintUtil.hex4(chunkSize)).append('\n');
+        return builder.toString();
+    }
 }

@@ -59,6 +59,14 @@ public class ResStringPoolChunk {
         return chunk;
     }
 
+    public String getString(int idx) {
+        return strings != null && idx < strings.size() ? strings.get(idx) : null;
+    }
+
+    public String getStyle(int idx) {
+        return styles != null && idx < styles.size() ? styles.get(idx) : null;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(64);
