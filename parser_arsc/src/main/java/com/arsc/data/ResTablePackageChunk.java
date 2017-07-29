@@ -10,6 +10,9 @@ import com.common.PrintUtil;
 
 public class ResTablePackageChunk {
 
+    public static final int RES_TABLE_TYPE_SPEC_TYPE = 0x0202;
+    public static final int RES_TABLE_TYPE_TYPE = 0x0201;
+
     // Header Block 0x0120
     public ChunkHeader header;
     public long id;
@@ -39,6 +42,9 @@ public class ResTablePackageChunk {
         chunk.typeStringPool = ResStringPoolChunk.parseFrom(s);
         s.seek(chunk.keyStringOffset);
         chunk.keyStringPool = ResStringPoolChunk.parseFrom(s);
+
+        // TableTypeSpecType TableTypeType
+
 
         return chunk;
     }

@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -9,19 +10,26 @@ import com.arsc.stream.ArscStreamer;
 
 public class ResTableTypeChunk {
 
+    public static final int LENGTH = 12;
 
-    public static ResTableTypeChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
+    public ChunkHeader header;
+    public long packageCount;
+
+    public static ResTableTypeChunk parseFrom(ArscStreamer s) {
         ResTableTypeChunk chunk = new ResTableTypeChunk();
+        chunk.header = ChunkHeader.parseFrom(s);
+        chunk.packageCount = s.readUInt();
         return chunk;
     }
-
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(64);
         String form = "%-16s %s\n";
 
-        builder.append("-- ResTableType Chunk --").append('\n');
+        builder.append("-- ResTable Chunk --").append('\n');
+        builder.append(header);
+        builder.append(String.format(form, "packageCount", PrintUtil.hex4(packageCount)));
         return builder.toString();
     }
 }

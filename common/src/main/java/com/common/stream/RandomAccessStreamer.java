@@ -127,6 +127,11 @@ public class RandomAccessStreamer {
         }
     }
 
+    public int readUint8() {
+        byte[] buf = read(1);
+        return 0xff & buf[0];
+    }
+
     protected char readChar8(Endian endian) {
         byte[] buf = read(1);
         return (char) buf[0];

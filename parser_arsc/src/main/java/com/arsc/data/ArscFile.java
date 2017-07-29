@@ -18,15 +18,11 @@ public class ArscFile {
     private static final int RES_TABLE_TYPE = 0x0002;
     private static final int RES_STRING_POOL_TYPE = 0x0001;
     private static final int RES_TABLE_PACKAGE_TYPE = 0x0200;
-    private static final int RES_TABLE_TYPE_SPEC_TYPE = 0x0202;
-    private static final int RES_TABLE_TYPE_TYPE = 0x0201;
 
     private ArscStreamer mStreamer;
-    public ResTableChunk arscHeader;
+    public ResTableTypeChunk arscHeader;
     public ResStringPoolChunk resStringPoolChunk;
     public ResTablePackageChunk resTablePackageChunk;
-    public ResTableTypeSpecChunk resTableTypeSpecChunk;
-    public ResTableTypeChunk resTableTypeChunk;
 
     public ArscFile() {
 
@@ -42,10 +38,10 @@ public class ArscFile {
         byte[] chunkBytes;
         long cursor = 0;
         // Load header first
-        chunkBytes = new byte[ResTableChunk.LENGTH];
+        chunkBytes = new byte[ResTableTypeChunk.LENGTH];
         cursor += racFile.read(chunkBytes, 0, chunkBytes.length);
         mStreamer.use(chunkBytes);
-        arscHeader = ResTableChunk.parseFrom(mStreamer);
+        arscHeader = ResTableTypeChunk.parseFrom(mStreamer);
 
         do {
             headBytes = new byte[ChunkHeader.LENGTH];
@@ -66,12 +62,6 @@ public class ArscFile {
                 case RES_TABLE_PACKAGE_TYPE:
                     resTablePackageChunk = parseTablePackageChunk(chunkBytes);
                     break;
-                case RES_TABLE_TYPE_SPEC_TYPE:
-                    resTableTypeSpecChunk = parseTableTypeSpecChunk(chunkBytes);
-                    break;
-                case RES_TABLE_TYPE_TYPE:
-                    resTableTypeChunk = parseTableTypeChunk(chunkBytes);
-                    break;
                 default:
                     LogUtil.e("Unknown type: 0x" + PrintUtil.hex2(header.type));
             }
@@ -85,8 +75,6 @@ public class ArscFile {
         builder.append(arscHeader).append('\n');
         builder.append(resStringPoolChunk).append('\n');
         builder.append(resTablePackageChunk).append('\n');
-        builder.append(resTableTypeSpecChunk).append('\n');
-        builder.append(resTableTypeChunk).append('\n');
         return builder.toString();
     }
 
@@ -98,15 +86,5 @@ public class ArscFile {
     private ResTablePackageChunk parseTablePackageChunk(byte[] chunkBytes) {
         mStreamer.use(chunkBytes);
         return ResTablePackageChunk.parseFrom(mStreamer, resStringPoolChunk);
-    }
-
-    private ResTableTypeSpecChunk parseTableTypeSpecChunk(byte[] chunkBytes) {
-        mStreamer.use(chunkBytes);
-        return ResTableTypeSpecChunk.parseFrom(mStreamer, resStringPoolChunk);
-    }
-
-    private ResTableTypeChunk parseTableTypeChunk(byte[] chunkBytes) {
-        mStreamer.use(chunkBytes);
-        return ResTableTypeChunk.parseFrom(mStreamer, resStringPoolChunk);
     }
 }
