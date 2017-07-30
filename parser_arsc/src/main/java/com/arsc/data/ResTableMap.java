@@ -25,8 +25,8 @@ public class ResTableMap {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(name.toString());
-        builder.append(value.toString());
+        builder.append(String.format("%-10s {%s}\n", "name", name.toString()));
+        builder.append("value:\n" + value.toString());
         return builder.toString();
     }
 }

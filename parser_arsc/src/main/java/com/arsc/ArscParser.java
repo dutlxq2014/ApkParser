@@ -35,6 +35,20 @@ public class ArscParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Build public.xml
+        try {
+            String targetFile = OUTPUT_DIR + "public.xml";
+            FileOutputStream fos = new FileOutputStream(targetFile);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+            writer.write(arscFile.buildPublicXml());
+            writer.close();
+            System.out.println("Public xml: " + targetFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArscFile parse(String mfFileName) {

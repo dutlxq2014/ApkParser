@@ -43,7 +43,7 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
 
-        builder.append(String.format("entryConfig array: %d\n", entryCount));
+        builder.append(String.format("entryConfig array: length=%d\n", entryCount));
         for (int i=0; i<entryCount; ++i) {
             builder.append(PrintUtil.hex4(entryConfig[i])).append(" ");
             if ((i + 1) % 16 == 0) {
@@ -55,6 +55,11 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    public String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+        return "";
     }
 
     @Override

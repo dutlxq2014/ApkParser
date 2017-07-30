@@ -103,4 +103,16 @@ public class ResTablePackageChunk {
 
         return builder.toString();
     }
+
+    public String buildEntry2String() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+        builder.append("<resources>\n");
+        for (int i=0; i<typeChunks.size(); ++i) {
+            String entry = typeChunks.get(i).buildEntry2String(typeStringPool, keyStringPool);
+            builder.append(entry);
+        }
+        builder.append("</resources>");
+        return builder.toString();
+    }
 }

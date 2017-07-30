@@ -87,7 +87,7 @@ public class ResStringPoolChunk {
         builder.append(String.format(form, "stringsStart", PrintUtil.hex4(stringsStart)));
         builder.append(String.format(form, "stylesStart", PrintUtil.hex4(stylesStart)));
 
-        builder.append(String.format("\nString offset array: %d\n", stringOffsetArray.length));
+        builder.append(String.format("\nString offset array: length=%d\n", stringOffsetArray.length));
         for (int i=0; i<stringOffsetArray.length; ++i) {
             builder.append(PrintUtil.hex4(stringOffsetArray[i])).append(" ");
             if ((i+1) % 16 == 0) {
@@ -95,16 +95,16 @@ public class ResStringPoolChunk {
             }
         }
 
-        builder.append(String.format("\nStyle offset array: %d\n", styleOffsetArray.length));
+        builder.append(String.format("\nStyle offset array: length=%d\n", styleOffsetArray.length));
         for (int i=0; i<styleOffsetArray.length; ++i) {
             builder.append(PrintUtil.hex4(styleOffsetArray[i])).append(" ");
         }
 
-        builder.append(String.format("\nStringPool Content: %d\n", stringCount));
+        builder.append(String.format("\nStringPool Content: count=%d\n", stringCount));
         for (int i=0; i<strings.size(); ++i) {
             builder.append(String.format("0x%x: ", i)).append(strings.get(i)).append('\n');
         }
-        builder.append(String.format("\nStylePools Content: %d\n", styleCount));
+        builder.append(String.format("\nStylePools Content: count=%d\n", styleCount));
         for (int i=0; i<styles.size(); ++i) {
             builder.append(styles.get(i)).append("\n");
         }

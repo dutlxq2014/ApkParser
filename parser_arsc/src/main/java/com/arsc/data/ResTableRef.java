@@ -20,6 +20,6 @@ public class ResTableRef {
 
     @Override
     public String toString() {
-        return String.format("%-10s 0x%s\n", "ident", PrintUtil.hex4(ident));
+        return String.format("%s: 0x%s", "ident", PrintUtil.hex4(ident));
     }
 }

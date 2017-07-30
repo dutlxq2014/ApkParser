@@ -35,13 +35,21 @@ public class ResTableMapEntry extends ResTableEntry {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(super.toString());
-        builder.append(parent);
+        builder.append(String.format("%-10s {%s}\n", "parent", parent));
         builder.append(String.format("%-10s 0x%s\n", "count", PrintUtil.hex4(count)));
-        builder.append("ResTableMap array:\n");
+        builder.append(String.format("ResTableMaps array: length=%d\n", resTableMaps.length));
         for (int i=0; i<resTableMaps.length; ++i) {
             builder.append("ResTableMap ID = ").append(i).append('\n');
             builder.append(resTableMaps[i]);
         }
+        return builder.toString();
+    }
+
+    public String buildEntry2String(ResStringPoolChunk keyStringPool) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<public ");
+        builder.append(keyStringPool.getString((int) key.index));
+        builder.append(" />\n");
         return builder.toString();
     }
 }

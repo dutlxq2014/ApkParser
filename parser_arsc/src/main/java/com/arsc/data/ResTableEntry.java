@@ -34,7 +34,18 @@ public class ResTableEntry {
         String form = "%-10s 0x%s\n";
         builder.append(String.format(form, "size", PrintUtil.hex2(size)));
         builder.append(String.format(form, "flags", PrintUtil.hex2(flags)));
-        builder.append(key);
+        builder.append(String.format("%-10s {%s} \t%s\n", "key", key, "/* Reference into ResTablePackage::keyStrings */"));
+        return builder.toString();
+    }
+
+    public String buildEntry2String(String type, ResStringPoolChunk keyStringPool) {
+        StringBuilder builder = new StringBuilder();
+        String form = "%s=\"%s\" ";
+        builder.append("<public ");
+        builder.append(String.format(form, "type", type));
+        builder.append(String.format(form, "name", keyStringPool.getString((int) key.index)));
+        builder.append(String.format(form, "id", "0x" + PrintUtil.hex4(0)));
+        builder.append("/>\n");
         return builder.toString();
     }
 }

@@ -9,7 +9,7 @@ public class LogUtil {
 
 
     public static void e(String... detail) {
-        System.out.println("E: " + format(detail));
+        System.err.println("E: " + format(detail));
     }
 
 

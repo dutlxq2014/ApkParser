@@ -8,4 +8,6 @@ package com.arsc.data;
 public abstract class BaseTypeChunk {
 
     public abstract String getChunkName();
+
+    public abstract String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool);
 }

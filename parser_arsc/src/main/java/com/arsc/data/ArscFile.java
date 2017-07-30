@@ -87,4 +87,8 @@ public class ArscFile {
         mStreamer.use(chunkBytes);
         return ResTablePackageChunk.parseFrom(mStreamer, resStringPoolChunk);
     }
+
+    public String buildPublicXml() {
+        return resTablePackageChunk.buildEntry2String();
+    }
 }

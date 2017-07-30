@@ -20,7 +20,7 @@ public class ResStringPoolRef {
 
     @Override
     public String toString() {
-        String form = "%-10s 0x%s\n";
+        String form = "%s: 0x%s";
         return String.format(form, "index", PrintUtil.hex4(index));
     }
 }

@@ -13,7 +13,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public static final long NO_ENTRY = 0xffffffffL;
 
     public ChunkHeader header;
-    public int id;      // 1byte
+    public int id;      // 1byte    resource type 0x00ff0000
     public int res0;    // 1byte
     public int res1;    // 2byte
     public long entryCount;
@@ -54,7 +54,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
             ResTableEntry entry = ResTableEntry.parseFrom(s);
 
             // We need to parse entry into ResTableMapEntry instead of ResTableEntry
-            if (entry.flags == 0x01) {
+            if (entry.flags == ResTableEntry.FLAG_COMPLEX) {
                 s.seek(cursor);             // Rest cursor
                 entry = ResTableMapEntry.parseFrom(s);      // Complex ResTableMapEntry
             } else {
@@ -71,17 +71,18 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public String toString() {
         StringBuilder builder = new StringBuilder(64);
         String form = "%-16s %s\n";
+        String form3 = "%-16s %s \t%s\n";
 
         builder.append("-- ResTableTypeInfoChunk --\n");
         builder.append(header);
-        builder.append(String.format(form, "id", PrintUtil.hex1(id)));
+        builder.append(String.format(form3, "id", PrintUtil.hex1(id), "/* Reference into ResTablePackage::typeStringPool */"));
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
         builder.append(String.format(form, "entriesStart", PrintUtil.hex4(entriesStart)));
         builder.append(resConfig);
 
-        builder.append(String.format("EntryOffset array: %s\n", entryOffsets.length));
+        builder.append(String.format("EntryOffset array: length=%d\n", entryOffsets.length));
         for (int i=0; i<entryOffsets.length; ++i) {
             builder.append(PrintUtil.hex4(entryOffsets[i])).append(' ');
             if ((i + 1) % 16 == 0) {
@@ -91,16 +92,43 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         if (entryOffsets.length % 16 != 0) {
             builder.append('\n');
         }
+        builder.append('\n');
 
-        builder.append("ResTableEntry array:\n");
+        builder.append(String.format("ResTableEntry array: length=%d\n", tableEntries.length));
         for (int i=0; i<tableEntries.length; ++i) {
-            builder.append(String.format("TableEntry ID = %d\n", i));
-            builder.append(tableEntries[i]);
-            if (resValues[i] != null) { // if (entry.flags != 0x01)
-                builder.append(i).append(resValues[i]);
+            ResTableEntry entry = tableEntries[i];
+            if (entry instanceof ResTableMapEntry) {
+                builder.append(String.format("ResTableMapEntry ID = %d\n", i));
+            } else {
+                builder.append(String.format("ResTableEntry ID = %d\n", i));
             }
+            if (entry == null) {
+                builder.append("null: no_entry\n");
+            } else {
+                builder.append(entry);
+            }
+
+            if (resValues[i] != null) {     // if (entry.flags != 0x01)
+                builder.append(String.format("ResValue ID = %d", i));
+                builder.append(resValues[i]);
+            }
+            builder.append('\n');
         }
 
+        return builder.toString();
+    }
+
+    @Override
+    public String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+        StringBuilder builder = new StringBuilder();
+        for (int i=0; i<tableEntries.length; ++i) {
+            String type = typeStringPool.getString(id-1);   // from 1
+            if (tableEntries[i] != null) {
+                builder.append(tableEntries[i].buildEntry2String(type, keyStringPool));
+            } else {
+                System.out.println("NO_ENTRY for " + type + " " + i);
+            }
+        }
         return builder.toString();
     }
 
