@@ -44,7 +44,7 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
 
         for (int i=0; i<entryCount; ++i) {
-            builder.append(PrintUtil.hex4(entryConfig[i]));
+            builder.append(PrintUtil.hex4(entryConfig[i])).append(" ");
             if ((i + 1) % 16 == 0) {
                 builder.append('\n');
             }

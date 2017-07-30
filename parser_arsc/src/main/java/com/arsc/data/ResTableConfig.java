@@ -9,7 +9,7 @@ import com.arsc.stream.ArscStreamer;
 
 public class ResTableConfig {
 
-    public long size;    // 4
+    public long size;    // 4    size of config object
 
     // union 4bytes
     public int mcc, mnc; // 2 + 2
@@ -49,6 +49,7 @@ public class ResTableConfig {
     public static ResTableConfig parseFrom(ArscStreamer s) {
         ResTableConfig config = new ResTableConfig();
         int cursor = s.getCursor();
+        int start = cursor;
 
         config.size = s.readUInt();
         cursor += 4;
@@ -107,6 +108,8 @@ public class ResTableConfig {
 
         config.localeScript = s.read(4);
         config.localeVariant = s.read(8);
+
+        s.seek(start + config.size);
 
         return config;
     }

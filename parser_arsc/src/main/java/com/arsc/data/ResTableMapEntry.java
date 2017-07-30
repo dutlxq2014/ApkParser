@@ -17,8 +17,7 @@ public class ResTableMapEntry extends ResTableEntry {
         ResTableMapEntry entry = new ResTableMapEntry();
         entry.size = s.readUShort();
         entry.flags = s.readUShort();
-        entry.key = new ResStringPoolRef();
-        entry.key.index = s.readUInt();
+        entry.key = ResStringPoolRef.parseFrom(s);
 
         entry.parent = ResTableRef.parseFrom(s);
         entry.count = s.readUInt();

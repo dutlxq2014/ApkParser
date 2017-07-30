@@ -4,6 +4,9 @@ import com.arsc.stream.ArscStreamer;
 import com.common.LogUtil;
 import com.common.PrintUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * Created by xueqiulxq on 26/07/2017.
@@ -26,6 +29,7 @@ public class ResTablePackageChunk {
     // DataBlock
     public ResStringPoolChunk typeStringPool;
     public ResStringPoolChunk keyStringPool;
+    public List<BaseTypeChunk> typeChunks;
 
     public static ResTablePackageChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTablePackageChunk chunk = new ResTablePackageChunk();
@@ -45,20 +49,24 @@ public class ResTablePackageChunk {
         chunk.keyStringPool = ResStringPoolChunk.parseFrom(s);
 
         // TableTypeSpecType   TableTypeType
+        s.seek(chunk.keyStringOffset + chunk.keyStringPool.header.chunkSize);
+        chunk.typeChunks = new ArrayList<BaseTypeChunk>();
         int resCount = 0;
-        while (false && s.getCursor() < s.length()) {
+        while (s.getCursor() < s.length()) {
 
             resCount++;
             ChunkHeader header = ChunkHeader.parseFrom(s);
             s.seek(s.getCursor() - ChunkHeader.LENGTH);
 
+            BaseTypeChunk typeChunk = null;
             if (header.type == RES_TABLE_TYPE_SPEC_TYPE) {
-                ResTableTypeSpecChunk typeSpecChunk = ResTableTypeSpecChunk.parseFrom(s, stringChunk);
+                typeChunk = ResTableTypeSpecChunk.parseFrom(s, stringChunk);
             } else if (header.type == RES_TABLE_TYPE_TYPE){
-                ResTableTypeInfoChunk typeChunk = ResTableTypeInfoChunk.parseFrom(s, stringChunk);
+                typeChunk = ResTableTypeInfoChunk.parseFrom(s, stringChunk);
             } else {
                 LogUtil.e("None TableTypeSpecType or TableTypeType!!");
             }
+            chunk.typeChunks.add(typeChunk);
         }
 
         return chunk;
@@ -83,6 +91,12 @@ public class ResTablePackageChunk {
         builder.append(typeStringPool);
         builder.append("\n-- KeyStringPool in ResTablePackage Chunk --\n");
         builder.append(keyStringPool);
+
+        // TypeSpec and TypeInfo chunks.
+        builder.append("\n-- TypeSpec and TypeInfo chunks --\n");
+        for (int i=0; i<typeChunks.size(); ++i) {
+            builder.append("Sequence : ").append(i).append("\n").append(typeChunks.get(i));
+        }
 
         return builder.toString();
     }

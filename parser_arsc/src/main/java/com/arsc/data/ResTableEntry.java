@@ -22,8 +22,7 @@ public class ResTableEntry {
         ResTableEntry entry = new ResTableEntry();
         entry.size = s.readUShort();
         entry.flags = s.readUShort();
-        entry.key = new ResStringPoolRef();
-        entry.key.index = s.readUInt();
+        entry.key = ResStringPoolRef.parseFrom(s);
 
         return entry;
     }
