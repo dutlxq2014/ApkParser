@@ -8,15 +8,15 @@ import com.common.PrintUtil;
  * Created by xueqiulxq on 26/07/2017.
  */
 
-public class ResTableTypeChunk {
+public class ResFileHeaderChunk {
 
     public static final int LENGTH = 12;
 
     public ChunkHeader header;
     public long packageCount;
 
-    public static ResTableTypeChunk parseFrom(ArscStreamer s) {
-        ResTableTypeChunk chunk = new ResTableTypeChunk();
+    public static ResFileHeaderChunk parseFrom(ArscStreamer s) {
+        ResFileHeaderChunk chunk = new ResFileHeaderChunk();
         chunk.header = ChunkHeader.parseFrom(s);
         chunk.packageCount = s.readUInt();
         return chunk;

@@ -6,4 +6,6 @@ package com.arsc.data;
  */
 
 public class ResStringPoolRef {
+
+    public long index;
 }

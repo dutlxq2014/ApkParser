@@ -127,7 +127,7 @@ public class RandomAccessStreamer {
         }
     }
 
-    public int readUint8() {
+    public int readUInt8() {
         byte[] buf = read(1);
         return 0xff & buf[0];
     }

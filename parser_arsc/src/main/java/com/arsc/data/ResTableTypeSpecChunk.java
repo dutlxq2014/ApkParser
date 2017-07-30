@@ -8,24 +8,27 @@ import com.common.PrintUtil;
  * Created by xueqiulxq on 26/07/2017.
  */
 
-public class ResTableTypeSpecTypeChunk {
+public class ResTableTypeSpecChunk extends BaseTypeChunk {
 
     public ChunkHeader header;
     public int id;      // 1byte
     public int res0;    // 1byte
     public int res1;    // 2byte
     public long entryCount;
-    public long entriesStart;
-    public ResTableConfig resConfig;
+    public long[] entryConfig;
 
-    public static ResTableTypeSpecTypeChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
-        ResTableTypeSpecTypeChunk chunk = new ResTableTypeSpecTypeChunk();
+    public static ResTableTypeSpecChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
+        ResTableTypeSpecChunk chunk = new ResTableTypeSpecChunk();
         chunk.header = ChunkHeader.parseFrom(s);
-        chunk.id = s.readUint8();
-        chunk.res0 = s.readUint8();
+        chunk.id = s.readUInt8();
+        chunk.res0 = s.readUInt8();
         chunk.res1 = s.readUShort();
         chunk.entryCount = s.readUInt();
+        chunk.entryConfig = new long[(int) chunk.entryCount];
 
+        for (int i=0; i<chunk.entryCount; ++i) {
+            chunk.entryConfig[i] = s.readUInt();
+        }
         return chunk;
     }
 
@@ -40,6 +43,12 @@ public class ResTableTypeSpecTypeChunk {
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
 
+        for (int i=0; i<entryCount; ++i) {
+            builder.append(PrintUtil.hex4(entryConfig[i]));
+            if ((i + 1) % 16 == 0) {
+                builder.append('\n');
+            }
+        }
 
         return builder.toString();
     }

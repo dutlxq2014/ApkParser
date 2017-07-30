@@ -20,7 +20,7 @@ public class ArscFile {
     private static final int RES_TABLE_PACKAGE_TYPE = 0x0200;
 
     private ArscStreamer mStreamer;
-    public ResTableTypeChunk arscHeader;
+    public ResFileHeaderChunk arscHeader;
     public ResStringPoolChunk resStringPoolChunk;
     public ResTablePackageChunk resTablePackageChunk;
 
@@ -38,10 +38,10 @@ public class ArscFile {
         byte[] chunkBytes;
         long cursor = 0;
         // Load header first
-        chunkBytes = new byte[ResTableTypeChunk.LENGTH];
+        chunkBytes = new byte[ResFileHeaderChunk.LENGTH];
         cursor += racFile.read(chunkBytes, 0, chunkBytes.length);
         mStreamer.use(chunkBytes);
-        arscHeader = ResTableTypeChunk.parseFrom(mStreamer);
+        arscHeader = ResFileHeaderChunk.parseFrom(mStreamer);
 
         do {
             headBytes = new byte[ChunkHeader.LENGTH];

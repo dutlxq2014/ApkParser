@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.LogUtil;
 import com.common.PrintUtil;
 
 /**
@@ -43,8 +44,22 @@ public class ResTablePackageChunk {
         s.seek(chunk.keyStringOffset);
         chunk.keyStringPool = ResStringPoolChunk.parseFrom(s);
 
-        // TableTypeSpecType TableTypeType
+        // TableTypeSpecType   TableTypeType
+        int resCount = 0;
+        while (false && s.getCursor() < s.length()) {
 
+            resCount++;
+            ChunkHeader header = ChunkHeader.parseFrom(s);
+            s.seek(s.getCursor() - ChunkHeader.LENGTH);
+
+            if (header.type == RES_TABLE_TYPE_SPEC_TYPE) {
+                ResTableTypeSpecChunk typeSpecChunk = ResTableTypeSpecChunk.parseFrom(s, stringChunk);
+            } else if (header.type == RES_TABLE_TYPE_TYPE){
+                ResTableTypeInfoChunk typeChunk = ResTableTypeInfoChunk.parseFrom(s, stringChunk);
+            } else {
+                LogUtil.e("None TableTypeSpecType or TableTypeType!!");
+            }
+        }
 
         return chunk;
     }
