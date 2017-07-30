@@ -95,7 +95,10 @@ public class ResTablePackageChunk {
         // TypeSpec and TypeInfo chunks.
         builder.append("\n-- TypeSpec and TypeInfo chunks --\n");
         for (int i=0; i<typeChunks.size(); ++i) {
-            builder.append("Sequence : ").append(i).append("\n").append(typeChunks.get(i));
+            BaseTypeChunk chunk = typeChunks.get(i);
+            builder.append("Sequence ID = ").append(i).append(" : ").append(chunk.getChunkName()).append("\n");
+            builder.append(chunk);
+            builder.append('\n');
         }
 
         return builder.toString();

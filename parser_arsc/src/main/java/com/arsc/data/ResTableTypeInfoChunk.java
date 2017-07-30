@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -18,7 +19,8 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public long entryCount;
     public long entriesStart;       // start of table entries.
     public ResTableConfig resConfig;
-    // DataBlock
+
+    // Data Block
     public long[] entryOffsets;     // offset of table entries.
     public ResTableEntry[] tableEntries;
     public ResValue[] resValues;    // direct value;
@@ -43,6 +45,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         chunk.resValues = new ResValue[(int) chunk.entryCount];
         s.seek(start + chunk.entriesStart); // Locate entry start point.
         for (int i=0; i<chunk.entryCount; ++i) {
+            // This is important!
             if (chunk.entryOffsets[i] == NO_ENTRY) {
                 continue;
             }
@@ -69,7 +72,40 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         StringBuilder builder = new StringBuilder(64);
         String form = "%-16s %s\n";
 
+        builder.append("-- ResTableTypeInfoChunk --\n");
         builder.append(header);
+        builder.append(String.format(form, "id", PrintUtil.hex1(id)));
+        builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
+        builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
+        builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
+        builder.append(String.format(form, "entriesStart", PrintUtil.hex4(entriesStart)));
+        builder.append(resConfig);
+
+        builder.append(String.format("EntryOffset array: %s\n", entryOffsets.length));
+        for (int i=0; i<entryOffsets.length; ++i) {
+            builder.append(PrintUtil.hex4(entryOffsets[i])).append(' ');
+            if ((i + 1) % 16 == 0) {
+                builder.append('\n');
+            }
+        }
+        if (entryOffsets.length % 16 != 0) {
+            builder.append('\n');
+        }
+
+        builder.append("ResTableEntry array:\n");
+        for (int i=0; i<tableEntries.length; ++i) {
+            builder.append(String.format("TableEntry ID = %d\n", i));
+            builder.append(tableEntries[i]);
+            if (resValues[i] != null) { // if (entry.flags != 0x01)
+                builder.append(i).append(resValues[i]);
+            }
+        }
+
         return builder.toString();
+    }
+
+    @Override
+    public String getChunkName() {
+        return "ResTableTypeInfoChunk";
     }
 }

@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -25,5 +26,15 @@ public class ResTableEntry {
         entry.key = ResStringPoolRef.parseFrom(s);
 
         return entry;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String form = "%-10s 0x%s\n";
+        builder.append(String.format(form, "size", PrintUtil.hex2(size)));
+        builder.append(String.format(form, "flags", PrintUtil.hex2(flags)));
+        builder.append(key);
+        return builder.toString();
     }
 }

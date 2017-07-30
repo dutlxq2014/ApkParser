@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -112,5 +113,36 @@ public class ResTableConfig {
         s.seek(start + config.size);
 
         return config;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String form2 = "%s:%s\n";
+        String union2 = "{%s:%s, %s:%s | %s:%s}\n";
+        String union3 = "{%s:%s, %s:%s, %s:%s | %s:%s}\n";
+        String union4 = "{%s:%s, %s:%s, %s:%s, %s:%s | %s:%s}\n";
+        builder.append("<ResTableConfig>\n");
+        builder.append(String.format(form2, "size", size));
+        builder.append(String.format(union2, "mcc", PrintUtil.hex2(mcc), "mnc", PrintUtil.hex2(mnc), "imsi", PrintUtil.hex4(imsi)));
+        builder.append(String.format(union2, "language", PrintUtil.hex2(language), "country", PrintUtil.hex2(country), "locale", PrintUtil.hex4(locale)));
+        builder.append(String.format(union3, "orientation", PrintUtil.hex1(orientation), "touchScreen", PrintUtil.hex1(touchScreen), "density", PrintUtil.hex2(density), "screenType", PrintUtil.hex4(screenType)));
+        builder.append(String.format(union4, "keyboard", PrintUtil.hex1(keyboard), "navigation", PrintUtil.hex1(navigation), "inputFlags", PrintUtil.hex2(inputFlags),  "inputPad0", PrintUtil.hex2(inputPad0), "input", PrintUtil.hex4(input)));
+        builder.append(String.format(union2, "screenWidth", PrintUtil.hex2(screenWidth), "screenHeight", PrintUtil.hex2(screenHeight), "screenSize", PrintUtil.hex4(screenSize)));
+        builder.append(String.format(union2, "sdkVersion", PrintUtil.hex2(sdkVersion), "minorVersion", PrintUtil.hex2(minorVersion), "version", PrintUtil.hex4(version)));
+        builder.append(String.format(union3, "screenLayout", PrintUtil.hex1(screenLayout), "uiModeByte", PrintUtil.hex1(uiModeByte), "smallestScreenWidthDp", PrintUtil.hex2(smallestScreenWidthDp), "screenConfig", PrintUtil.hex4(screenConfig)));
+        builder.append(String.format(union2, "screenWidthDp", PrintUtil.hex2(screenWidthDp), "screenHeightDp", PrintUtil.hex2(screenHeightDp), "screenSizeDp", PrintUtil.hex4(screenSizeDp)));
+        builder.append("localeScript: ");
+        for (int i=0; i<localeScript.length; ++i) {
+            builder.append(PrintUtil.hex1(localeScript[i] & 0xff)).append(' ');
+        }
+        builder.append('\n');
+        builder.append("localeVariant: ");
+        for (int i=0; i<localeVariant.length; ++i) {
+            builder.append(PrintUtil.hex1(localeVariant[i] & 0xff)).append(' ');
+        }
+        builder.append('\n');
+        builder.append("</ResTableConfig>\n");
+        return builder.toString();
     }
 }

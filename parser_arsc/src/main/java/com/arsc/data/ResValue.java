@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -59,6 +60,19 @@ public class ResValue {
         value.dataType = s.readUInt8();
         value.data = s.readUInt();
         return value;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        String form = "%-10s %s\n";
+        builder.append("<ResValue>\n");
+        builder.append(String.format(form, "size", PrintUtil.hex2(size)));
+        builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
+        builder.append(String.format(form, "dataType", PrintUtil.hex1(dataType)));
+        builder.append(String.format(form, "data", PrintUtil.hex4(data)));
+        builder.append("</ResValue>\n");
+        return builder.toString();
     }
 
     public String getTypeStr(){

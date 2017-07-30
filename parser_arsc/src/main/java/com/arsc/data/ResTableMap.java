@@ -21,4 +21,12 @@ public class ResTableMap {
         tableMap.value = ResValue.parseFrom(s);
         return tableMap;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name.toString());
+        builder.append(value.toString());
+        return builder.toString();
+    }
 }

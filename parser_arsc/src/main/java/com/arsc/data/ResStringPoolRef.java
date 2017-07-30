@@ -1,6 +1,7 @@
 package com.arsc.data;
 
 import com.arsc.stream.ArscStreamer;
+import com.common.PrintUtil;
 
 /**
  *
@@ -15,5 +16,11 @@ public class ResStringPoolRef {
         ResStringPoolRef ref = new ResStringPoolRef();
         ref.index = s.readUInt();
         return ref;
+    }
+
+    @Override
+    public String toString() {
+        String form = "%-10s 0x%s\n";
+        return String.format(form, "index", PrintUtil.hex4(index));
     }
 }
