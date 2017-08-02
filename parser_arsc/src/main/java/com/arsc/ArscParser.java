@@ -24,7 +24,7 @@ public class ArscParser {
         ArscFile arscFile = parser.parse(fileName);
         // System.out.println(arscFile);
 
-        System.out.println("Results:");
+        LogUtil.e(TAG, "Result:");
         // Dump raw chunks to build directory
         try {
             String targetFile = OUTPUT_DIR + "raw_chunks.txt";

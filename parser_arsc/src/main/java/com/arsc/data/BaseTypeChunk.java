@@ -9,5 +9,9 @@ public abstract class BaseTypeChunk {
 
     public abstract String getChunkName();
 
+    public abstract long getEntryCount();
+
+    public abstract String getType();
+
     public abstract String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool);
 }

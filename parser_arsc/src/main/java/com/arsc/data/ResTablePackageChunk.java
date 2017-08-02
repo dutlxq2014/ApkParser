@@ -54,22 +54,28 @@ public class ResTablePackageChunk {
         s.seek(chunk.keyStringOffset + chunk.keyStringPool.header.chunkSize);
         chunk.typeChunks = new ArrayList<BaseTypeChunk>();
         int resCount = 0;
+        StringBuilder logInfo = new StringBuilder();
         while (s.getCursor() < s.length()) {
 
+            logInfo.setLength(0);
             resCount++;
             ChunkHeader header = ChunkHeader.parseFrom(s);
             s.seek(s.getCursor() - ChunkHeader.LENGTH);
 
             BaseTypeChunk typeChunk = null;
             if (header.type == RES_TABLE_TYPE_SPEC_TYPE) {
-                LogUtil.i(TAG, "RES_TABLE_TYPE_SPEC_TYPE");
                 typeChunk = ResTableTypeSpecChunk.parseFrom(s, stringChunk);
             } else if (header.type == RES_TABLE_TYPE_TYPE){
-                LogUtil.i(TAG, "RES_TABLE_TYPE_TYPE");
                 typeChunk = ResTableTypeInfoChunk.parseFrom(s, stringChunk);
-            } else {
-                LogUtil.e(TAG, "None TableTypeSpecType or TableTypeType!!");
             }
+            if (typeChunk != null) {
+                logInfo.append(typeChunk.getChunkName()).append(" ")
+                        .append(String.format("type=%s ", typeChunk.getType()))
+                        .append(String.format("count=%s ", typeChunk.getEntryCount()));
+            } else {
+                logInfo.append("None TableTypeSpecType or TableTypeType!!");
+            }
+            LogUtil.i(TAG, logInfo.toString());
             chunk.typeChunks.add(typeChunk);
         }
 

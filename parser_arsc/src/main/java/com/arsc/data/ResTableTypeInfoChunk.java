@@ -129,4 +129,14 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public String getChunkName() {
         return "ResTableTypeInfoChunk";
     }
+
+    @Override
+    public long getEntryCount() {
+        return entryCount;
+    }
+
+    @Override
+    public String getType() {
+        return String.format("0x%s", PrintUtil.hex1(id));
+    }
 }
