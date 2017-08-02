@@ -23,7 +23,6 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     // Data Block
     public long[] entryOffsets;     // offset of table entries.
     public ResTableEntry[] tableEntries;
-    public ResValue[] resValues;    // direct value;
 
     public static ResTableTypeInfoChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTableTypeInfoChunk chunk = new ResTableTypeInfoChunk();
@@ -42,7 +41,6 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         }
 
         chunk.tableEntries = new ResTableEntry[(int) chunk.entryCount];
-        chunk.resValues = new ResValue[(int) chunk.entryCount];
         s.seek(start + chunk.entriesStart); // Locate entry start point.
         for (int i=0; i<chunk.entryCount; ++i) {
             // This is important!
@@ -53,12 +51,12 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
             int cursor = s.getCursor();     // Remember the start cursor
             ResTableEntry entry = ResTableEntry.parseFrom(s);
 
-            // We need to parse entry into ResTableMapEntry instead of ResTableEntry
+            s.seek(cursor);                 // Rest cursor
+            // We need to parse entry into ResTableMapEntry instead of ResTableMapEntry
             if (entry.flags == ResTableEntry.FLAG_COMPLEX) {
-                s.seek(cursor);             // Rest cursor
                 entry = ResTableMapEntry.parseFrom(s);      // Complex ResTableMapEntry
             } else {
-                chunk.resValues[i] = ResValue.parseFrom(s); // ResTableEntry follows a ResValue
+                entry = ResTableValueEntry.parseFrom(s);    // ResTableEntry follows a ResValue
             }
             chunk.tableEntries[i] = entry;
         }
@@ -100,17 +98,12 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
             if (entry instanceof ResTableMapEntry) {
                 builder.append(String.format("ResTableMapEntry ID = %d\n", i));
             } else {
-                builder.append(String.format("ResTableEntry ID = %d\n", i));
+                builder.append(String.format("ResTableValueEntry ID = %d\n", i));
             }
             if (entry == null) {
                 builder.append("null: no_entry\n");
             } else {
                 builder.append(entry);
-            }
-
-            if (resValues[i] != null) {     // if (entry.flags != 0x01)
-                builder.append(String.format("ResValue ID = %d", i));
-                builder.append(resValues[i]);
             }
             builder.append('\n');
         }

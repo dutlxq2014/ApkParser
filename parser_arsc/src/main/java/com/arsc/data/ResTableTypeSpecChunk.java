@@ -64,6 +64,6 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
 
     @Override
     public String getChunkName() {
-        return "ResTableTypeSpec";
+        return "ResTableTypeSpecChunk";
     }
 }

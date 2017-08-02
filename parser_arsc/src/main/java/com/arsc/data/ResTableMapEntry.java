@@ -16,9 +16,7 @@ public class ResTableMapEntry extends ResTableEntry {
 
     public static ResTableMapEntry parseFrom(ArscStreamer s) {
         ResTableMapEntry entry = new ResTableMapEntry();
-        entry.size = s.readUShort();
-        entry.flags = s.readUShort();
-        entry.key = ResStringPoolRef.parseFrom(s);
+        ResTableEntry.parseFrom(s, entry);
 
         entry.parent = ResTableRef.parseFrom(s);
         entry.count = s.readUInt();
@@ -45,11 +43,16 @@ public class ResTableMapEntry extends ResTableEntry {
         return builder.toString();
     }
 
-    public String buildEntry2String(ResStringPoolChunk keyStringPool) {
+    @Override
+    public String buildEntry2String(String type, ResStringPoolChunk keyStringPool) {
+
         StringBuilder builder = new StringBuilder();
+        String form = "%s=\"%s\" ";
         builder.append("<public ");
-        builder.append(keyStringPool.getString((int) key.index));
-        builder.append(" />\n");
+        builder.append(String.format(form, "type", type));
+        builder.append(String.format(form, "name", keyStringPool.getString((int) key.index)));
+        builder.append(String.format(form, "id", "0x" + PrintUtil.hex4(0)));
+        builder.append("/>\n");
         return builder.toString();
     }
 }

@@ -21,11 +21,14 @@ public class ResTableEntry {
 
     public static ResTableEntry parseFrom(ArscStreamer s) {
         ResTableEntry entry = new ResTableEntry();
+        parseFrom(s, entry);
+        return entry;
+    }
+
+    public static void parseFrom(ArscStreamer s, ResTableEntry entry) {
         entry.size = s.readUShort();
         entry.flags = s.readUShort();
         entry.key = ResStringPoolRef.parseFrom(s);
-
-        return entry;
     }
 
     @Override
@@ -38,6 +41,7 @@ public class ResTableEntry {
         return builder.toString();
     }
 
+    /** This is abstract method. */
     public String buildEntry2String(String type, ResStringPoolChunk keyStringPool) {
         StringBuilder builder = new StringBuilder();
         String form = "%s=\"%s\" ";
