@@ -15,6 +15,8 @@ import java.io.RandomAccessFile;
 
 public class ArscFile {
 
+    private static final String TAG = ArscFile.class.getSimpleName();
+
     private static final int RES_TABLE_TYPE = 0x0002;
     private static final int RES_STRING_POOL_TYPE = 0x0001;
     private static final int RES_TABLE_PACKAGE_TYPE = 0x0200;
@@ -32,7 +34,7 @@ public class ArscFile {
         racFile.seek(0);
         mStreamer = new LittleEndianStreamer();
         long fileLen = racFile.length();
-        LogUtil.i("fileLen = 0x" + PrintUtil.hex4(racFile.length()));
+        LogUtil.i(TAG, "fileLen = 0x" + PrintUtil.hex4(racFile.length()));
 
         byte[] headBytes;
         byte[] chunkBytes;
@@ -53,7 +55,7 @@ public class ArscFile {
             chunkBytes = new byte[(int) header.chunkSize];
             System.arraycopy(headBytes, 0, chunkBytes, 0, ChunkHeader.LENGTH);
             cursor += racFile.read(chunkBytes, ChunkHeader.LENGTH, (int)header.chunkSize - ChunkHeader.LENGTH);
-            LogUtil.i(header.toRowString().replace("\n", ""), "cursor=0x" + PrintUtil.hex4(cursor));
+            LogUtil.i(TAG, header.toRowString().replace("\n", ""), "cursor=0x" + PrintUtil.hex4(cursor));
 
             switch (header.type) {
                 case RES_STRING_POOL_TYPE:

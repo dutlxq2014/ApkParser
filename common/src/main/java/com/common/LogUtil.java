@@ -8,26 +8,27 @@ package com.common;
 public class LogUtil {
 
 
-    public static void e(String... detail) {
-        System.err.println("E: " + format(detail));
+    public static void e(String tag, String... detail) {
+        System.err.println(tag + ": " + format(detail));
     }
 
-
-    public static void i(String... detail) {
-        System.out.println("I: " + format(detail));
+    public static void i(String tag, String... detail) {
+        System.out.println(tag + ": " + format(detail));
     }
 
     private static String format(String... detail) {
-        if (detail == null) {
+        if (detail == null || detail.length == 0) {
             return "";
+        } else if (detail.length == 1) {
+            return detail[0];
         }
-        String ret = "";
+        StringBuilder builder = new StringBuilder();
         for (int i=0; i<detail.length; ++i) {
-            ret += detail[i];
+            builder.append(detail[i]);
             if (i < detail.length - 1) {
-                ret += " ; ";
+                builder.append(", ");
             }
         }
-        return ret;
+        return builder.toString();
     }
 }

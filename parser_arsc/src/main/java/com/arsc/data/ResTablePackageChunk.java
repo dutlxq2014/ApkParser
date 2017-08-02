@@ -14,6 +14,8 @@ import java.util.List;
 
 public class ResTablePackageChunk {
 
+    public static final String TAG = ResTablePackageChunk.class.getSimpleName();
+
     public static final int RES_TABLE_TYPE_SPEC_TYPE = 0x0202;
     public static final int RES_TABLE_TYPE_TYPE = 0x0201;
 
@@ -60,11 +62,13 @@ public class ResTablePackageChunk {
 
             BaseTypeChunk typeChunk = null;
             if (header.type == RES_TABLE_TYPE_SPEC_TYPE) {
+                LogUtil.i(TAG, "RES_TABLE_TYPE_SPEC_TYPE");
                 typeChunk = ResTableTypeSpecChunk.parseFrom(s, stringChunk);
             } else if (header.type == RES_TABLE_TYPE_TYPE){
+                LogUtil.i(TAG, "RES_TABLE_TYPE_TYPE");
                 typeChunk = ResTableTypeInfoChunk.parseFrom(s, stringChunk);
             } else {
-                LogUtil.e("None TableTypeSpecType or TableTypeType!!");
+                LogUtil.e(TAG, "None TableTypeSpecType or TableTypeType!!");
             }
             chunk.typeChunks.add(typeChunk);
         }
@@ -107,11 +111,13 @@ public class ResTablePackageChunk {
     public String buildEntry2String() {
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-        builder.append("<resources>\n");
+        builder.append("<resources>\n\t");
         for (int i=0; i<typeChunks.size(); ++i) {
             String entry = typeChunks.get(i).buildEntry2String(typeStringPool, keyStringPool);
+            entry = entry.replace("\n", "\n\t");
             builder.append(entry);
         }
+        builder.setLength(builder.length() - 1);
         builder.append("</resources>");
         return builder.toString();
     }

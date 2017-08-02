@@ -2,6 +2,7 @@ package com.arsc;
 
 import com.arsc.data.ArscFile;
 import com.common.FileUtil;
+import com.common.LogUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -12,6 +13,8 @@ import java.io.RandomAccessFile;
 
 public class ArscParser {
 
+    private static final String TAG = "ArscParser";
+
     private static final String OUTPUT_DIR = "parser_arsc/build/";
 
     public static void main(String[] args) {
@@ -19,7 +22,7 @@ public class ArscParser {
         String fileName = "parser_arsc/res/resources.arsc";
         ArscParser parser = new ArscParser();
         ArscFile arscFile = parser.parse(fileName);
-        System.out.println(arscFile);
+        // System.out.println(arscFile);
 
         System.out.println("Results:");
         // Dump raw chunks to build directory
@@ -65,5 +68,6 @@ public class ArscParser {
         }
         return null;
     }
+
 }
 

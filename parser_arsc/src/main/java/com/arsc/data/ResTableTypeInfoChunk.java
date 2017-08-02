@@ -119,7 +119,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
             if (tableEntries[i] != null) {
                 builder.append(tableEntries[i].buildEntry2String(type, keyStringPool));
             } else {
-                System.out.println("NO_ENTRY for " + type + " " + i);
+                //System.out.println("NO_ENTRY for " + type + " " + i);
             }
         }
         return builder.toString();

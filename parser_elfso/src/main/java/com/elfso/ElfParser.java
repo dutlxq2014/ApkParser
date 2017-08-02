@@ -12,6 +12,8 @@ import java.io.RandomAccessFile;
 
 public class ElfParser {
 
+    private static final String TAG = ElfParser.class.getSimpleName();
+
     public ElfFile parse(String soFileName) {
         RandomAccessFile racFile = null;
         try {
@@ -38,7 +40,7 @@ public class ElfParser {
         ElfParser parser = new ElfParser();
         ElfFile elfFile = parser.parse(fileName);
         if (elfFile != null) {
-            LogUtil.i(elfFile.toString());
+            LogUtil.i(TAG, elfFile.toString());
         } else {
             LogUtil.e("Parse failed: " + fileName);
         }

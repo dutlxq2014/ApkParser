@@ -16,6 +16,8 @@ import java.io.RandomAccessFile;
 
 public class ElfFile {
 
+    private static final String TAG = ElfFile.class.getSimpleName();
+
     // Tools
     private ElfStreamer mStreamer;
     // Sections
@@ -57,7 +59,7 @@ public class ElfFile {
 
         completeElfDetails(racFile);
 
-        LogUtil.i("Parse end!\n");
+        LogUtil.i(TAG, "Parse end!\n");
     }
 
     @Override

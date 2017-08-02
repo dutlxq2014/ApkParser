@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class MfFile {
 
+    private static final String TAG = MfFile.class.getSimpleName();
+
     private MfStreamer mStreamer;
     public MfHeader header;
     public StringChunk stringChunk;
@@ -82,7 +84,7 @@ public class MfFile {
                 default:
                     break;
             }
-            LogUtil.i(info.toString());
+            LogUtil.i(TAG, info.toString());
         } while (cursor < header.fileLength);
     }
 
