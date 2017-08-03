@@ -35,7 +35,7 @@ public class ResTableValueEntry extends ResTableEntry {
         builder.append("<public ");
         builder.append(String.format(form, "type", typeStr));
         builder.append(String.format(form, "name", keyStringPool.getString((int) key.index)));
-        builder.append(String.format(form, "pkgId", "0x" + PrintUtil.hex4(resId)));
+        builder.append(String.format(form, "id", "0x" + PrintUtil.hex4(resId)));
         builder.append("/>\n");
         return builder.toString();
     }
