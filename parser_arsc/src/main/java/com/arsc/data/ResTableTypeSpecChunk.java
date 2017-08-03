@@ -11,7 +11,7 @@ import com.common.PrintUtil;
 public class ResTableTypeSpecChunk extends BaseTypeChunk {
 
     public ChunkHeader header;
-    public int id;      // 1byte
+    public int typeId;      // 1byte
     public int res0;    // 1byte
     public int res1;    // 2byte
     public long entryCount;
@@ -20,7 +20,7 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
     public static ResTableTypeSpecChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTableTypeSpecChunk chunk = new ResTableTypeSpecChunk();
         chunk.header = ChunkHeader.parseFrom(s);
-        chunk.id = s.readUInt8();
+        chunk.typeId = s.readUInt8();
         chunk.res0 = s.readUInt8();
         chunk.res1 = s.readUShort();
         chunk.entryCount = s.readUInt();
@@ -38,7 +38,7 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
         String form = "%-16s %s\n";
 
         builder.append(header);
-        builder.append(String.format(form, "id", PrintUtil.hex1(id)));
+        builder.append(String.format(form, "typeId", PrintUtil.hex1(typeId)));
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
@@ -58,11 +58,6 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
     }
 
     @Override
-    public String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
-        return "";
-    }
-
-    @Override
     public String getChunkName() {
         return "ResTableTypeSpecChunk";
     }
@@ -74,6 +69,6 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
 
     @Override
     public String getType() {
-        return String.format("0x%s", PrintUtil.hex1(id));
+        return String.format("0x%s", PrintUtil.hex1(typeId));
     }
 }

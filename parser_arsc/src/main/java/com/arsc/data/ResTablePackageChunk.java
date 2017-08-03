@@ -21,7 +21,7 @@ public class ResTablePackageChunk {
 
     // Header Block 0x0120
     public ChunkHeader header;
-    public long id;
+    public long pkgId;                 // 0x0000007f->UserResources  0x00000001->SystemResources
     public String packageName;
     public long typeStringOffest;   // Offset in this chunk
     public long lastPublicType;     // Num of type string
@@ -36,7 +36,7 @@ public class ResTablePackageChunk {
     public static ResTablePackageChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTablePackageChunk chunk = new ResTablePackageChunk();
         chunk.header = ChunkHeader.parseFrom(s);
-        chunk.id = s.readUInt();
+        chunk.pkgId = s.readUInt();
         chunk.packageName = s.readNullEndString16(128 * 2);
         chunk.typeStringOffest = s.readUInt();
         chunk.lastPublicType = s.readUInt();
@@ -89,7 +89,7 @@ public class ResTablePackageChunk {
 
         builder.append("-- ResTablePackage Chunk --").append('\n');
         builder.append(header);
-        builder.append(String.format(form, "id", PrintUtil.hex4(id)));
+        builder.append(String.format(form, "pkgId", PrintUtil.hex4(pkgId)));
         builder.append(String.format(form, "packageName", packageName));
         builder.append(String.format(form, "typeStringOffest", PrintUtil.hex4(typeStringOffest)));
         builder.append(String.format(form, "lastPublicType", PrintUtil.hex4(lastPublicType)));
@@ -119,9 +119,13 @@ public class ResTablePackageChunk {
         builder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         builder.append("<resources>\n\t");
         for (int i=0; i<typeChunks.size(); ++i) {
-            String entry = typeChunks.get(i).buildEntry2String(typeStringPool, keyStringPool);
-            entry = entry.replace("\n", "\n\t");
-            builder.append(entry);
+            // All entries exist in ResTableTypeInfoChunk
+            if (typeChunks.get(i) instanceof ResTableTypeInfoChunk) {
+                ResTableTypeInfoChunk chunk = (ResTableTypeInfoChunk) typeChunks.get(i);
+                String entry = chunk.buildEntry2String((int) pkgId & 0xff, typeStringPool, keyStringPool);
+                entry = entry.replace("\n", "\n\t");
+                builder.append(entry);
+            }
         }
         builder.setLength(builder.length() - 1);
         builder.append("</resources>");

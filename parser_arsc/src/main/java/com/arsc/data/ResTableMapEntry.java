@@ -10,7 +10,7 @@ import com.common.PrintUtil;
 
 public class ResTableMapEntry extends ResTableEntry {
 
-    public ResTableRef parent;  // Reference parent ResTableMapEntry id, if parent not exists the value should be zero.
+    public ResTableRef parent;  // Reference parent ResTableMapEntry pkgId, if parent not exists the value should be zero.
     public long count;          // Num of ResTableMap following.
     public ResTableMap[] resTableMaps;
 
@@ -43,15 +43,14 @@ public class ResTableMapEntry extends ResTableEntry {
         return builder.toString();
     }
 
-    @Override
-    public String buildEntry2String(String type, ResStringPoolChunk keyStringPool) {
-
+    public String buildEntry2String(int packageId, int typeId, String typeStr, ResStringPoolChunk keyStringPool) {
         StringBuilder builder = new StringBuilder();
+        long resId = (packageId << 24) | (typeId << 16) | (entryId & 0xffff);
         String form = "%s=\"%s\" ";
         builder.append("<public ");
-        builder.append(String.format(form, "type", type));
+        builder.append(String.format(form, "type", typeStr));
         builder.append(String.format(form, "name", keyStringPool.getString((int) key.index)));
-        builder.append(String.format(form, "id", "0x" + PrintUtil.hex4(0)));
+        builder.append(String.format(form, "pkgId", "0x" + PrintUtil.hex4(resId)));
         builder.append("/>\n");
         return builder.toString();
     }

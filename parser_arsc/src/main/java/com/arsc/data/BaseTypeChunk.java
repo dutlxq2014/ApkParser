@@ -12,6 +12,4 @@ public abstract class BaseTypeChunk {
     public abstract long getEntryCount();
 
     public abstract String getType();
-
-    public abstract String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool);
 }

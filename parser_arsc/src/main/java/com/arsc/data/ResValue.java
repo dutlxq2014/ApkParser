@@ -17,6 +17,7 @@ public class ResValue {
     public final static int TYPE_FLOAT = 0x04;
     public final static int TYPE_DIMENSION = 0x05;
     public final static int TYPE_FRACTION = 0x06;
+    public static final int TYPE_DYNAMIC_REFERENCE = 0x07;
     public final static int TYPE_FIRST_INT = 0x10;
     public final static int TYPE_INT_DEC = 0x10;
     public final static int TYPE_INT_HEX = 0x11;
@@ -111,10 +112,43 @@ public class ResValue {
     }
 
     public String getDataStr() {
-        return "Unknown";
+        String dataStr;
+        if (dataType == TYPE_REFERENCE) {
+            dataStr = String.format("@%s/0x%08x", getPackage(data), data);
+        } else if (dataType == TYPE_ATTRIBUTE) {
+            dataStr = String.format("?%s/0x%08x", getPackage(data), data);
+        } else if (dataType == TYPE_STRING) {
+//            dataStr = stringChunk.getString(data);
+            dataStr = "TODO";
+        } else if (dataType == TYPE_FLOAT) {
+            dataStr = String.valueOf(Float.intBitsToFloat((int) data));
+        } else if (dataType == TYPE_DIMENSION) {
+            dataStr = Float.toString(complexToFloat((int) data)) + getDimenUnit(data);
+        } else if (dataType == TYPE_FRACTION) {
+            dataStr = Float.toString(complexToFloat((int) data)) + getFractionUnit(data);
+        } else if (dataType == TYPE_DYNAMIC_REFERENCE) {
+            dataStr = "TYPE_DYNAMIC_REFERENCE";
+        } else if (dataType == TYPE_INT_DEC) {
+            dataStr = String.format("%d", data);
+        } else if (dataType == TYPE_INT_HEX) {
+            dataStr = String.format("0x%08x", data);
+        } else if (dataType == TYPE_INT_BOOLEAN) {
+            dataStr = data == 0 ? "false" : "true";
+        } else if (dataType == TYPE_INT_COLOR_ARGB8) {
+            dataStr = String.format("#%08x", data);
+        } else if (dataType == TYPE_INT_COLOR_RGB8) {
+            dataStr = String.format("#ff%06x", 0xffffff & data);
+        } else if (dataType == TYPE_INT_COLOR_ARGB4) {
+            dataStr = String.format("#%04x", 0xffff & data);
+        } else if (dataType == TYPE_INT_COLOR_RGB4) {
+            dataStr = String.format("#f%03x", 0x0fff & data);
+        } else {
+            dataStr = String.format("<0x%08x, type 0x%08x>", data, dataType);
+        }
+        return dataStr;
     }
 
-    private static String getPackage(int id) {
+    private static String getPackage(long id) {
         if (id >>> 24 == 1) {
             return "android:";
         }
@@ -137,5 +171,25 @@ public class ResValue {
             "%","%p","","","","","",""
     };
 
+    private static String getDimenUnit(long data) {
+        //noinspection PointlessBitwiseExpression
+        switch ((int) (data >> COMPLEX_UNIT_SHIFT & COMPLEX_UNIT_MASK)) {
+            case COMPLEX_UNIT_PX: return "px";
+            case COMPLEX_UNIT_DIP: return "dp";
+            case COMPLEX_UNIT_SP: return "sp";
+            case COMPLEX_UNIT_PT: return "pt";
+            case COMPLEX_UNIT_IN: return "in";
+            case COMPLEX_UNIT_MM: return "mm";
+            default: return " (unknown unit)";
+        }
+    }
 
+    private static String getFractionUnit(long data) {
+        //noinspection PointlessBitwiseExpression
+        switch ((int) (data >> COMPLEX_UNIT_SHIFT & COMPLEX_UNIT_MASK)) {
+            case COMPLEX_UNIT_FRACTION: return "%%";
+            case COMPLEX_UNIT_FRACTION_PARENT: return "%%p";
+            default: return " (unknown unit)";
+        }
+    }
 }

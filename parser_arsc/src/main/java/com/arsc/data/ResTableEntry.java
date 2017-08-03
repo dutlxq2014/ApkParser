@@ -19,6 +19,8 @@ public class ResTableEntry {
     public int flags;   // short
     public ResStringPoolRef key;    // Reference into ResTablePackage::keyStrings identifying this entry.
 
+    public int entryId; // 16bit  0x7f01nnnn
+
     public static ResTableEntry parseFrom(ArscStreamer s) {
         ResTableEntry entry = new ResTableEntry();
         parseFrom(s, entry);
@@ -41,15 +43,7 @@ public class ResTableEntry {
         return builder.toString();
     }
 
-    /** This is abstract method. */
-    public String buildEntry2String(String type, ResStringPoolChunk keyStringPool) {
-        StringBuilder builder = new StringBuilder();
-        String form = "%s=\"%s\" ";
-        builder.append("<public ");
-        builder.append(String.format(form, "type", type));
-        builder.append(String.format(form, "name", keyStringPool.getString((int) key.index)));
-        builder.append(String.format(form, "id", "0x" + PrintUtil.hex4(0)));
-        builder.append("/>\n");
-        return builder.toString();
+    public String buildEntry2String(int packageId, int typeId, String typeStr, ResStringPoolChunk keyStringPool) {
+        return "Not implemented.";
     }
 }

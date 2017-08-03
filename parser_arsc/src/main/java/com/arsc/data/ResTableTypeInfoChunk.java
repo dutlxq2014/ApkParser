@@ -58,6 +58,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
             } else {
                 entry = ResTableValueEntry.parseFrom(s);    // ResTableEntry follows a ResValue
             }
+            entry.entryId = i;                 // Remember entry index in tableEntries to recover ids in public.xml
             chunk.tableEntries[i] = entry;
         }
 
@@ -73,7 +74,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
 
         builder.append("-- ResTableTypeInfoChunk --\n");
         builder.append(header);
-        builder.append(String.format(form3, "id", PrintUtil.hex1(id), "/* Reference into ResTablePackage::typeStringPool */"));
+        builder.append(String.format(form3, "pkgId", PrintUtil.hex1(id), "/* Reference into ResTablePackage::typeStringPool */"));
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
@@ -111,13 +112,13 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         return builder.toString();
     }
 
-    @Override
-    public String buildEntry2String(ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+    public String buildEntry2String(int packageId, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
         StringBuilder builder = new StringBuilder();
         for (int i=0; i<tableEntries.length; ++i) {
-            String type = typeStringPool.getString(id-1);   // from 1
+            String typeStr = typeStringPool.getString(id - 1);   // from 1
             if (tableEntries[i] != null) {
-                builder.append(tableEntries[i].buildEntry2String(type, keyStringPool));
+                String entryStr = tableEntries[i].buildEntry2String(packageId, id, typeStr, keyStringPool);
+                builder.append(entryStr);
             } else {
                 //System.out.println("NO_ENTRY for " + type + " " + i);
             }
