@@ -27,7 +27,7 @@ public class ArscParser {
         // System.out.println(arscFile);
 
         System.out.println();
-        LogUtil.e(TAG, "Result:");
+        LogUtil.i(TAG, "Result:");
         // Dump raw chunks to build directory
         try {
             String targetFile = OUTPUT_DIR + "raw_chunks.txt";
@@ -57,7 +57,7 @@ public class ArscParser {
         }
 
         System.out.println();
-        LogUtil.i(TAG, "TEST:");
+        LogUtil.i(TAG, "Test getResource:");
         // Test
         int resId = 0x7f010002;
         ResTableEntry res = arscFile.getResource(resId);

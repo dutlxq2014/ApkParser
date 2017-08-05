@@ -75,4 +75,9 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
     public int getTypeId() {
         return typeId;
     }
+
+    @Override
+    public void translateValues(ResStringPoolChunk globalStringPool, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+        // Ignored
+    }
 }

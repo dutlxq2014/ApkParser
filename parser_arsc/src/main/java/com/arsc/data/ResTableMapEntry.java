@@ -54,4 +54,14 @@ public class ResTableMapEntry extends ResTableEntry {
         builder.append("/>\n");
         return builder.toString();
     }
+
+    @Override
+    public void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool) {
+        super.translateValues(globalStringPool, typeStringPool, keyStringPool);
+        for (int i=0; i<resTableMaps.length; ++i) {
+            resTableMaps[i].translateValues(globalStringPool, typeStringPool, keyStringPool);
+        }
+    }
 }

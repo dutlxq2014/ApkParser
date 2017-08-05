@@ -29,4 +29,10 @@ public class ResTableMap {
         builder.append("value:\n" + value.toString());
         return builder.toString();
     }
+
+    public void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool) {
+        value.translateValues(globalStringPool, typeStringPool, keyStringPool);
+    }
 }

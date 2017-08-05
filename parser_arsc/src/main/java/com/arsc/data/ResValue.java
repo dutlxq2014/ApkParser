@@ -53,6 +53,7 @@ public class ResValue {
     public int res0;        // byte
     public int dataType;    // byte;
     public long data;       // int index to data
+    public String dataStr;
 
     public static ResValue parseFrom(ArscStreamer s) {
         ResValue value = new ResValue();
@@ -61,6 +62,12 @@ public class ResValue {
         value.dataType = s.readUInt8();
         value.data = s.readUInt();
         return value;
+    }
+
+    public void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool) {
+        dataStr = getDataStr(globalStringPool);
     }
 
     @Override
@@ -73,6 +80,7 @@ public class ResValue {
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
         builder.append(String.format(form3, "dataType", PrintUtil.hex1(dataType), getTypeStr()));
         builder.append(String.format(form, "data", PrintUtil.hex4(data)));
+        builder.append(String.format(form, "dataStr", dataStr));
         builder.append("</ResValue>\n");
         return builder.toString();
     }
@@ -111,15 +119,14 @@ public class ResValue {
         return "Unknown";
     }
 
-    public String getDataStr() {
+    public String getDataStr(ResStringPoolChunk stringPool) {
         String dataStr;
         if (dataType == TYPE_REFERENCE) {
             dataStr = String.format("@%s/0x%08x", getPackage(data), data);
         } else if (dataType == TYPE_ATTRIBUTE) {
             dataStr = String.format("?%s/0x%08x", getPackage(data), data);
         } else if (dataType == TYPE_STRING) {
-//            dataStr = stringChunk.getString(data);
-            dataStr = "TODO";
+            dataStr = stringPool.getString((int) data);
         } else if (dataType == TYPE_FLOAT) {
             dataStr = String.valueOf(Float.intBitsToFloat((int) data));
         } else if (dataType == TYPE_DIMENSION) {
@@ -187,8 +194,8 @@ public class ResValue {
     private static String getFractionUnit(long data) {
         //noinspection PointlessBitwiseExpression
         switch ((int) (data >> COMPLEX_UNIT_SHIFT & COMPLEX_UNIT_MASK)) {
-            case COMPLEX_UNIT_FRACTION: return "%%";
-            case COMPLEX_UNIT_FRACTION_PARENT: return "%%p";
+            case COMPLEX_UNIT_FRACTION: return "%";
+            case COMPLEX_UNIT_FRACTION_PARENT: return "%p";
             default: return " (unknown unit)";
         }
     }

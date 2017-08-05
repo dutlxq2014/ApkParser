@@ -85,6 +85,9 @@ public class ResTablePackageChunk {
         }
 
         chunk.createResourceIndex();
+        for (int i=0; i<chunk.typeChunks.size(); ++i) {
+            chunk.typeChunks.get(i).translateValues(stringChunk, chunk.typeStringPool, chunk.keyStringPool);
+        }
 
         return chunk;
     }

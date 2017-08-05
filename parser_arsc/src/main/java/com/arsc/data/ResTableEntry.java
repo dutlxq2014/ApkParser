@@ -20,6 +20,7 @@ public class ResTableEntry {
     public ResStringPoolRef key;    // Reference into ResTablePackage::keyStrings identifying this entry.
 
     public int entryId; // 16bit  0x7f01nnnn
+    public String keyStr;
 
     public static ResTableEntry parseFrom(ArscStreamer s) {
         ResTableEntry entry = new ResTableEntry();
@@ -45,5 +46,11 @@ public class ResTableEntry {
 
     public String buildEntry2String(int packageId, int typeId, String typeStr, ResStringPoolChunk keyStringPool) {
         return "Not implemented.";
+    }
+
+    public void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool) {
+        keyStr = keyStringPool.getString((int) key.index);
     }
 }

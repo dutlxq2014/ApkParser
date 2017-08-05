@@ -39,4 +39,12 @@ public class ResTableValueEntry extends ResTableEntry {
         builder.append("/>\n");
         return builder.toString();
     }
+
+    @Override
+    public void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool) {
+        super.translateValues(globalStringPool, typeStringPool, keyStringPool);
+        resValue.translateValues(globalStringPool, typeStringPool, keyStringPool);
+    }
 }

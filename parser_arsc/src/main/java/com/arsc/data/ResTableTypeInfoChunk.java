@@ -164,6 +164,15 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         return typeId;
     }
 
+    @Override
+    public void translateValues(ResStringPoolChunk globalStringPool, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+        for (ResTableEntry entry : tableEntries) {
+            if (entry != null) {
+                entry.translateValues(globalStringPool, typeStringPool, keyStringPool);
+            }
+        }
+    }
+
     public ResTableEntry getResource(int resId) {
         int entryId = resId & 0x0000ffff;
         return entryId < tableEntries.length ? tableEntries[entryId] : null;

@@ -14,4 +14,8 @@ public abstract class BaseTypeChunk {
     public abstract String getType();
 
     public abstract int getTypeId();
+
+    public abstract void translateValues(ResStringPoolChunk globalStringPool,
+                                ResStringPoolChunk typeStringPool,
+                                ResStringPoolChunk keyStringPool);
 }
