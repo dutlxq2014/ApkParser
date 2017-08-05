@@ -3,6 +3,8 @@ package com.arsc.data;
 import com.arsc.stream.ArscStreamer;
 import com.common.PrintUtil;
 
+import java.util.List;
+
 /**
  *
  * Created by xueqiulxq on 26/07/2017.
@@ -112,15 +114,32 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         return builder.toString();
     }
 
-    public String buildEntry2String(int packageId, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+    public String buildEntry2String(int entryId, int packageId, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
+        if (entryId < tableEntries.length && tableEntries[entryId] != null) {
+            String typeStr = typeStringPool.getString(typeId - 1);  // from 1
+            return tableEntries[entryId].buildEntry2String(packageId, typeId, typeStr, keyStringPool);
+        } else {
+            //System.out.println("NO_ENTRY for " + typeId + " " + entryId);
+            return null;
+        }
+    }
+
+    public static String uniqueEntries2String(int packageId,
+                                              ResStringPoolChunk typeStringPool,
+                                              ResStringPoolChunk keyStringPool,
+                                              List<ResTableTypeInfoChunk> typeInfos) {
         StringBuilder builder = new StringBuilder();
-        for (int i=0; i<tableEntries.length; ++i) {
-            String typeStr = typeStringPool.getString(typeId - 1);   // from 1
-            if (tableEntries[i] != null) {
-                String entryStr = tableEntries[i].buildEntry2String(packageId, typeId, typeStr, keyStringPool);
-                builder.append(entryStr);
-            } else {
-                //System.out.println("NO_ENTRY for " + type + " " + i);
+
+        int configCount = typeInfos.size();
+        int entryCount = (int) typeInfos.get(0).entryCount;
+
+        for (int i=0; i<entryCount; ++i) {
+            for (int j=0; j<configCount; ++j) {
+                String entryStr = typeInfos.get(j).buildEntry2String(i, packageId, typeStringPool, keyStringPool);
+                if (entryStr != null && entryStr.length() > 0) {
+                    builder.append(entryStr);
+                    break;  // This entryId has done.
+                }
             }
         }
         return builder.toString();

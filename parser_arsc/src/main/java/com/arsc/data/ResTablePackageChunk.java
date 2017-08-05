@@ -118,15 +118,26 @@ public class ResTablePackageChunk {
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         builder.append("<resources>\n\t");
-        for (int i=0; i<typeChunks.size(); ++i) {
+
+        for (int i = 0; i<typeChunks.size(); ++i) {
             // All entries exist in ResTableTypeInfoChunk
-            if (typeChunks.get(i) instanceof ResTableTypeInfoChunk) {
-                ResTableTypeInfoChunk chunk = (ResTableTypeInfoChunk) typeChunks.get(i);
-                String entry = chunk.buildEntry2String((int) pkgId & 0xff, typeStringPool, keyStringPool);
-                entry = entry.replace("\n", "\n\t");
-                builder.append(entry);
+            if (typeChunks.get(i) instanceof ResTableTypeSpecChunk) {
+                // Extract following ResTableTypeInfoChunks
+                List<ResTableTypeInfoChunk> typeInfos = new ArrayList<ResTableTypeInfoChunk>();
+                for (int j = i + 1; j<typeChunks.size(); ++j) {
+                    if (typeChunks.get(j) instanceof ResTableTypeInfoChunk) {
+                        typeInfos.add((ResTableTypeInfoChunk) typeChunks.get(j));
+                    } else {
+                        break;
+                    }
+                }
+                i += typeInfos.size();
+                // Unique ResTableTypeInfoChunks
+                String entry = ResTableTypeInfoChunk.uniqueEntries2String((int) pkgId & 0xff, typeStringPool, keyStringPool, typeInfos);
+                builder.append(entry.replace("\n", "\n\t"));
             }
         }
+
         builder.setLength(builder.length() - 1);
         builder.append("</resources>");
         return builder.toString();
