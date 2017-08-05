@@ -13,7 +13,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public static final long NO_ENTRY = 0xffffffffL;
 
     public ChunkHeader header;
-    public int id;      // 1byte    resource type 0x00ff0000
+    public int typeId;      // 1byte    resource type 0x00ff0000
     public int res0;    // 1byte
     public int res1;    // 2byte
     public long entryCount;
@@ -28,7 +28,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
         ResTableTypeInfoChunk chunk = new ResTableTypeInfoChunk();
         int start = s.getCursor();
         chunk.header = ChunkHeader.parseFrom(s);
-        chunk.id = s.readUInt8();
+        chunk.typeId = s.readUInt8();
         chunk.res0 = s.readUInt8();
         chunk.res1 = s.readUShort();
         chunk.entryCount = s.readUInt();
@@ -74,7 +74,7 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
 
         builder.append("-- ResTableTypeInfoChunk --\n");
         builder.append(header);
-        builder.append(String.format(form3, "pkgId", PrintUtil.hex1(id), "/* Reference into ResTablePackage::typeStringPool */"));
+        builder.append(String.format(form3, "typeId", PrintUtil.hex1(typeId), "/* Reference into ResTablePackage::typeStringPool */"));
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
         builder.append(String.format(form, "res1", PrintUtil.hex1(res1)));
         builder.append(String.format(form, "entryCount", PrintUtil.hex4(entryCount)));
@@ -115,9 +115,9 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public String buildEntry2String(int packageId, ResStringPoolChunk typeStringPool, ResStringPoolChunk keyStringPool) {
         StringBuilder builder = new StringBuilder();
         for (int i=0; i<tableEntries.length; ++i) {
-            String typeStr = typeStringPool.getString(id - 1);   // from 1
+            String typeStr = typeStringPool.getString(typeId - 1);   // from 1
             if (tableEntries[i] != null) {
-                String entryStr = tableEntries[i].buildEntry2String(packageId, id, typeStr, keyStringPool);
+                String entryStr = tableEntries[i].buildEntry2String(packageId, typeId, typeStr, keyStringPool);
                 builder.append(entryStr);
             } else {
                 //System.out.println("NO_ENTRY for " + type + " " + i);
@@ -138,6 +138,6 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
 
     @Override
     public String getType() {
-        return String.format("0x%s", PrintUtil.hex1(id));
+        return String.format("0x%s", PrintUtil.hex1(typeId));
     }
 }
