@@ -12,4 +12,6 @@ public abstract class BaseTypeChunk {
     public abstract long getEntryCount();
 
     public abstract String getType();
+
+    public abstract int getTypeId();
 }

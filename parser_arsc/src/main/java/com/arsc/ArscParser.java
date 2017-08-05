@@ -1,8 +1,10 @@
 package com.arsc;
 
 import com.arsc.data.ArscFile;
+import com.arsc.data.ResTableEntry;
 import com.common.FileUtil;
 import com.common.LogUtil;
+import com.common.PrintUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -24,6 +26,7 @@ public class ArscParser {
         ArscFile arscFile = parser.parse(fileName);
         // System.out.println(arscFile);
 
+        System.out.println();
         LogUtil.e(TAG, "Result:");
         // Dump raw chunks to build directory
         try {
@@ -51,6 +54,17 @@ public class ArscParser {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        System.out.println();
+        LogUtil.i(TAG, "TEST:");
+        // Test
+        int resId = 0x7f010002;
+        ResTableEntry res = arscFile.getResource(resId);
+        if (res != null) {
+            LogUtil.i(TAG, res.toString());
+        } else {
+            LogUtil.i(TAG, "Resource ID 0x" + PrintUtil.hex4(resId) + " cannot be found.");
         }
     }
 

@@ -93,4 +93,13 @@ public class ArscFile {
     public String buildPublicXml() {
         return resTablePackageChunk.buildEntry2String();
     }
+
+    public ResTableEntry getResource(int resId) {
+        long pkgId = (resId & 0xff000000L) >> 24;
+        if (resTablePackageChunk.pkgId == pkgId) {
+            return resTablePackageChunk.getResource(resId);
+        } else {
+            return null;
+        }
+    }
 }

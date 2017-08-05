@@ -5,7 +5,9 @@ import com.common.LogUtil;
 import com.common.PrintUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -32,6 +34,9 @@ public class ResTablePackageChunk {
     public ResStringPoolChunk typeStringPool;
     public ResStringPoolChunk keyStringPool;
     public List<BaseTypeChunk> typeChunks;
+
+    // Create Index
+    public Map<Integer, List<BaseTypeChunk>> typeInfoIndexer;
 
     public static ResTablePackageChunk parseFrom(ArscStreamer s, ResStringPoolChunk stringChunk) {
         ResTablePackageChunk chunk = new ResTablePackageChunk();
@@ -78,6 +83,8 @@ public class ResTablePackageChunk {
             LogUtil.i(TAG, logInfo.toString());
             chunk.typeChunks.add(typeChunk);
         }
+
+        chunk.createResourceIndex();
 
         return chunk;
     }
@@ -141,5 +148,32 @@ public class ResTablePackageChunk {
         builder.setLength(builder.length() - 1);
         builder.append("</resources>");
         return builder.toString();
+    }
+
+    private void createResourceIndex() {
+        typeInfoIndexer = new HashMap<Integer, List<BaseTypeChunk>>();
+        for (BaseTypeChunk typeChunk : typeChunks) {
+            // The first chunk in typeList should be ResTableTypeSpecChunk
+            List<BaseTypeChunk> typeList = typeInfoIndexer.get(typeChunk.getTypeId());
+            if (typeList == null) {
+                typeList = new ArrayList<BaseTypeChunk>();
+                typeInfoIndexer.put(typeChunk.getTypeId(), typeList);
+            }
+            typeList.add(typeChunk);
+        }
+    }
+
+    public ResTableEntry getResource(int resId) {
+        int typeId = (resId & 0x00ff0000) >> 16;
+        List<BaseTypeChunk> typeList = typeInfoIndexer.get(typeId); // The first chunk in typeList should be ResTableTypeSpecChunk
+        for (int i=1; i<typeList.size(); ++i) {
+            if (typeList.get(i) instanceof ResTableTypeInfoChunk) {
+                ResTableEntry entry = ((ResTableTypeInfoChunk) typeList.get(i)).getResource(resId);
+                if (entry != null) {
+                    return entry;
+                }
+            }
+        }
+        return null;
     }
 }

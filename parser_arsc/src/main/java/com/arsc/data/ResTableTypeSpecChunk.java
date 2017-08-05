@@ -71,4 +71,8 @@ public class ResTableTypeSpecChunk extends BaseTypeChunk {
     public String getType() {
         return String.format("0x%s", PrintUtil.hex1(typeId));
     }
+
+    public int getTypeId() {
+        return typeId;
+    }
 }

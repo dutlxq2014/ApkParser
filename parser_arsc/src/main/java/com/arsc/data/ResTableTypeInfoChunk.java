@@ -159,4 +159,13 @@ public class ResTableTypeInfoChunk extends BaseTypeChunk {
     public String getType() {
         return String.format("0x%s", PrintUtil.hex1(typeId));
     }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public ResTableEntry getResource(int resId) {
+        int entryId = resId & 0x0000ffff;
+        return entryId < tableEntries.length ? tableEntries[entryId] : null;
+    }
 }
