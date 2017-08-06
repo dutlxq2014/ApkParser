@@ -69,7 +69,7 @@ public class ArscParser {
     }
 
     public ArscFile parse(String mfFileName) {
-        RandomAccessFile racFile;
+        RandomAccessFile racFile = null;
         try {
             racFile = FileUtil.loadAsRAF(mfFileName);
             ArscFile mfFile = new ArscFile();
@@ -79,6 +79,8 @@ public class ArscParser {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            FileUtil.closeQuietly(racFile);
         }
         return null;
     }

@@ -56,7 +56,7 @@ public class ManifestParser {
     }
 
     public MfFile parse(String mfFileName) {
-        RandomAccessFile racFile;
+        RandomAccessFile racFile = null;
         try {
             racFile = FileUtil.loadAsRAF(mfFileName);
             MfFile mfFile = new MfFile();
@@ -66,6 +66,8 @@ public class ManifestParser {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            FileUtil.closeQuietly(racFile);
         }
         return null;
     }
