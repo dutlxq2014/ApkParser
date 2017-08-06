@@ -41,6 +41,7 @@ public class ResTableEntry {
         builder.append(String.format(form, "size", PrintUtil.hex2(size)));
         builder.append(String.format(form, "flags", PrintUtil.hex2(flags)));
         builder.append(String.format("%-10s {%s} \t%s\n", "key", key, "/* Reference into ResTablePackage::keyStrings */"));
+        builder.append(String.format("%-10s %s\n", "keyStr", keyStr));
         return builder.toString();
     }
 

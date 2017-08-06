@@ -73,8 +73,8 @@ public class ResValue {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String form = "%-10s %s\n";
-        String form3 = "%-10s %s  %s\n";
+        String form = "\t%-10s %s\n";
+        String form3 = "\t%-10s %s  %s\n";
         builder.append("<ResValue>\n");
         builder.append(String.format(form, "size", PrintUtil.hex2(size)));
         builder.append(String.format(form, "res0", PrintUtil.hex1(res0)));
