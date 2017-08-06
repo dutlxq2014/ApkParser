@@ -20,4 +20,4 @@ This repo introduces four of them which we contact most frequently in our daily 
 
 The `common` module provides several tool implementations to facilitate the procedure of parsing e.g. RandomAccessStreamer, LogUtil, PrintUtil and more.
 
-If you have interest in this work, feel free to fork and extend more features as you lik. Ideas worth spread.
+If you have interest in this work, feel free to fork and extend more features as you like. Ideas worth spread.
