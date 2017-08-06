@@ -25,7 +25,7 @@ public class ResTablePackageChunk {
     public ChunkHeader header;
     public long pkgId;                 // 0x0000007f->UserResources  0x00000001->SystemResources
     public String packageName;
-    public long typeStringOffest;   // Offset in this chunk
+    public long typeStringOffset;   // Offset in this chunk
     public long lastPublicType;     // Num of type string
     public long keyStringOffset;    // Offset in chunk
     public long lastPublicKey;      // Num of key string
@@ -43,14 +43,13 @@ public class ResTablePackageChunk {
         chunk.header = ChunkHeader.parseFrom(s);
         chunk.pkgId = s.readUInt();
         chunk.packageName = s.readNullEndString16(128 * 2);
-        chunk.typeStringOffest = s.readUInt();
+        chunk.typeStringOffset = s.readUInt();
         chunk.lastPublicType = s.readUInt();
         chunk.keyStringOffset = s.readUInt();
         chunk.lastPublicKey = s.readUInt();
-        s.read(4);  // Skip
 
         // Data Block
-        s.seek(chunk.typeStringOffest);
+        s.seek(chunk.typeStringOffset);
         chunk.typeStringPool = ResStringPoolChunk.parseFrom(s);
         s.seek(chunk.keyStringOffset);
         chunk.keyStringPool = ResStringPoolChunk.parseFrom(s);
@@ -101,7 +100,7 @@ public class ResTablePackageChunk {
         builder.append(header);
         builder.append(String.format(form, "pkgId", PrintUtil.hex4(pkgId)));
         builder.append(String.format(form, "packageName", packageName));
-        builder.append(String.format(form, "typeStringOffest", PrintUtil.hex4(typeStringOffest)));
+        builder.append(String.format(form, "typeStringOffset", PrintUtil.hex4(typeStringOffset)));
         builder.append(String.format(form, "lastPublicType", PrintUtil.hex4(lastPublicType)));
         builder.append(String.format(form, "keyStringOffset", PrintUtil.hex4(keyStringOffset)));
         builder.append(String.format(form, "lastPublicKey", PrintUtil.hex4(lastPublicKey)));

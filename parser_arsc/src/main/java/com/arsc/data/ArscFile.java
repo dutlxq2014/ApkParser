@@ -39,8 +39,16 @@ public class ArscFile {
         byte[] headBytes;
         byte[] chunkBytes;
         long cursor = 0;
-        // Load header first
+        ChunkHeader header;
+
+        // Preload file header. The chunkSize represents the complete file length.
         chunkBytes = new byte[ResFileHeaderChunk.LENGTH];
+        racFile.read(chunkBytes, 0, chunkBytes.length);
+        mStreamer.use(chunkBytes);
+        header = ChunkHeader.parseFrom(mStreamer);
+        // Post load file header.
+        racFile.seek(0);
+        chunkBytes = new byte[header.headerSize];
         cursor += racFile.read(chunkBytes, 0, chunkBytes.length);
         mStreamer.use(chunkBytes);
         arscHeader = ResFileHeaderChunk.parseFrom(mStreamer);
@@ -49,7 +57,7 @@ public class ArscFile {
             headBytes = new byte[ChunkHeader.LENGTH];
             cursor += racFile.read(headBytes, 0, headBytes.length);
             mStreamer.use(headBytes);
-            ChunkHeader header = ChunkHeader.parseFrom(mStreamer);
+            header = ChunkHeader.parseFrom(mStreamer);
 
             // Chunk size = ChunkInfo + BodySize
             chunkBytes = new byte[(int) header.chunkSize];
@@ -69,8 +77,6 @@ public class ArscFile {
             }
 
         } while (cursor < fileLen);
-
-
     }
 
     @Override

@@ -31,6 +31,8 @@ public class ResStringPoolChunk {
 
     public static ResStringPoolChunk parseFrom(ArscStreamer s) {
 
+        long baseCursor = s.getCursor();
+
         ResStringPoolChunk chunk = new ResStringPoolChunk();
         chunk.header = ChunkHeader.parseFrom(s);
         chunk.stringCount = s.readUInt();
@@ -51,11 +53,15 @@ public class ResStringPoolChunk {
             styleOffsets[i] = s.readUInt();
         }
         for (int i=0; i<chunk.stringCount; ++i) {
+            long start = baseCursor + chunk.stringsStart + strOffsets[i];
+            s.seek((int) start);
             int len = (s.readUShort() & 0x7f00) >> 8;
             String str = s.readNullEndString(len + 1); // The last byte is 0x00
             strings.add(str);
         }
         for (int i=0; i<chunk.styleCount; ++i) {
+            long start = baseCursor + chunk.stylesStart + styleOffsets[i];
+            s.seek((int) start);
             int len = (s.readUShort() & 0x7f00) >> 8;
             String str = s.readNullEndString(len + 1); // The last byte is 0x00
             styles.add(str);
