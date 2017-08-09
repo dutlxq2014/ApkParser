@@ -7,4 +7,15 @@ package com.dex.stream;
 
 public class LittleEndianStreamer extends DexStreamer {
 
+    public int readU1() {
+        return readUInt8();
+    }
+
+    public int readU2() {
+        return readUnsignedShort(Endian.Little);
+    }
+
+    public long readU4() {
+        return readUnsignedInt(Endian.Little);
+    }
 }

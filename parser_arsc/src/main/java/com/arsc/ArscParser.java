@@ -15,7 +15,7 @@ import java.io.RandomAccessFile;
 
 public class ArscParser {
 
-    private static final String TAG = "ArscParser";
+    private static final String TAG = ArscParser.class.getSimpleName();
 
     private static final String OUTPUT_DIR = "parser_arsc/build/";
 

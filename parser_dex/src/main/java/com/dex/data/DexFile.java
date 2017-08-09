@@ -1,5 +1,8 @@
 package com.dex.data;
 
+import com.dex.stream.DexStreamer;
+import com.dex.stream.LittleEndianStreamer;
+
 import java.io.RandomAccessFile;
 
 /**
@@ -9,7 +12,11 @@ import java.io.RandomAccessFile;
 
 public class DexFile {
 
+    private DexStreamer mStreamer;
+
     public void parse(RandomAccessFile racFile) {
+
+        mStreamer = new LittleEndianStreamer();
 
     }
 }
