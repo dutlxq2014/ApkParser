@@ -26,4 +26,12 @@ public class PrintUtil {
     public static String hex4(long num) {
         return String.format("%08x", num);
     }
+
+    public static String hex(byte[] bytes) {
+        StringBuilder builder = new StringBuilder();
+        for (int i=0; i<bytes.length; ++i) {
+            builder.append(String.format("%02x", bytes[i] & 0xff));
+        }
+        return builder.toString();
+    }
 }

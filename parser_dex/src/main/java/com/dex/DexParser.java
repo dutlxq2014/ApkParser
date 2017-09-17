@@ -26,6 +26,8 @@ public class DexParser {
             return dexFile;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             FileUtil.closeQuietly(racFile);
         }
