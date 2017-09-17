@@ -15,26 +15,32 @@ public class DexFile {
 
     private DexStreamer mStreamer;
     public DexHeader dexHeader;
+    public StringPool stringPool;
+    public TypePool typePool;
 
     public void parse(RandomAccessFile racFile) throws IOException {
         racFile.seek(0);
         mStreamer = new LittleEndianStreamer();
 
         byte[] headerBytes;
-        byte[] bodyBytes;
-        long cursor = 0;
 
         headerBytes = new byte[DexHeader.LENGTH];
-        cursor += racFile.read(headerBytes, 0, headerBytes.length);
+        racFile.read(headerBytes, 0, headerBytes.length);
         mStreamer.use(headerBytes);
         dexHeader = DexHeader.parseFrom(mStreamer);
+
+        stringPool = StringPool.parseFrom(racFile, mStreamer, dexHeader);
+        typePool = TypePool.parseFrom(racFile, mStreamer, dexHeader, stringPool);
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(dexHeader);
-
+        builder.append('\n');
+        builder.append(stringPool);
+        builder.append('\n');
+        builder.append(typePool);
         return builder.toString();
     }
 }

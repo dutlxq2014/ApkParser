@@ -14,4 +14,8 @@ public abstract class DexStreamer extends RandomAccessStreamer {
     public abstract int readU2();
 
     public abstract long readU4();
+
+    public abstract long parseUleb4(byte[] bytes);
+
+    public abstract String readString(int len);
 }

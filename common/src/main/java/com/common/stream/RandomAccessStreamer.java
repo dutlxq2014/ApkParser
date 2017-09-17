@@ -109,6 +109,36 @@ public class RandomAccessStreamer {
         return ret;
     }
 
+    public byte[] readUleb128Bytes() {
+        byte[] buf = new byte[5];
+        int len = 0;
+        boolean hitEnd = false;
+        do {
+            byte[] b = read(1);
+            buf[len] = b[0];
+            hitEnd = (b[0] & 0x80) == 0;
+            ++len;
+        } while (!hitEnd);
+        byte[] ret = new byte[len];
+        System.arraycopy(buf, 0, ret, 0, ret.length);
+        return ret;
+    }
+
+    protected long parseUleb128Int(byte[] bytes, Endian endian) {
+        int len = bytes.length;
+        long res = 0;
+        if (endian == Endian.Little) {
+            for (int i=0; i<len; ++i) {
+                res |= (bytes[i] & 0x7f) << (7*i);
+            }
+        } else {
+            for (int i=0; i<len; ++i) {
+                res |= (bytes[i] & 0x7f) << (7 * (len - i - 1));
+            }
+        }
+        return res;
+    }
+
     protected int readUnsignedShort(Endian endian) {
         byte[] buf = read(2);
         if (endian == Endian.Little) {
