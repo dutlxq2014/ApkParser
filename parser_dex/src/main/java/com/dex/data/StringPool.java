@@ -36,8 +36,8 @@ public class StringPool {
         return pool;
     }
 
-    public String getString(int idx) {
-        return idx < stringDataItems.length ? stringDataItems[idx].data : null;
+    public String getString(long idx) {
+        return idx < stringDataItems.length ? stringDataItems[(int) idx].data : null;
     }
 
     @Override

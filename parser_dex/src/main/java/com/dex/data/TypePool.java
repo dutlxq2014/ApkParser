@@ -34,8 +34,8 @@ public class TypePool {
         return pool;
     }
 
-    public String getType(int idx) {
-        return idx < descriptors.length ? descriptors[idx] : null;
+    public String getType(long idx) {
+        return idx < descriptors.length ? descriptors[(int) idx] : null;
     }
 
     @Override
