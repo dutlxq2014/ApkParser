@@ -24,10 +24,14 @@ public class ProtoPool {
             racFile.seek(offset);
             racFile.read(itemBytes, 0, itemBytes.length);
             s.use(itemBytes);
-            items[i] = ProtoDataItem.parseFrom(racFile, s, dexHeader, stringPool, typePool);
+            items[i] = ProtoDataItem.parseFrom(racFile, s, stringPool, typePool);
         }
 
         return pool;
+    }
+
+    public ProtoDataItem getProto(long idx) {
+        return idx < protoItems.length ? protoItems[(int) idx] : null;
     }
 
     @Override
@@ -35,9 +39,7 @@ public class ProtoPool {
         StringBuilder builder = new StringBuilder();
         builder.append("-- Proto pool --\n");
         for (int i=0; i<protoItems.length; ++i) {
-            builder.append("id: ").append(i).append("\n");
-            builder.append(protoItems[i]);
-            builder.append('\n');
+            builder.append('p').append(i).append(". ").append(protoItems[i]).append('\n');
         }
         return builder.toString();
     }

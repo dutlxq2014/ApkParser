@@ -43,7 +43,7 @@ public class TypePool {
         StringBuilder builder = new StringBuilder();
         builder.append("-- Type pool --\n");
         for (int i=0; i<descriptorIdx.length; ++i) {
-            builder.append(String.format("idx=%s\t \"%s\"\n", PrintUtil.hex4(descriptorIdx[i]), descriptors[i]));
+            builder.append(String.format("t%d. idx=%s  \"%s\"\n", i, PrintUtil.hex4(descriptorIdx[i]), descriptors[i]));
         }
         return builder.toString();
     }

@@ -28,8 +28,8 @@ public class DexHeader {
     public long typeIdsOff;     // 4B
     public long protoIdsSize;   // 4B
     public long protoIdsOff;    // 4B
-    public long filedIdsSize;   // 4B
-    public long filedIdsOff;    // 4B
+    public long fieldIdsSize;   // 4B
+    public long fieldIdsOff;    // 4B
     public long methodIdsSize;  // 4B
     public long methodIdsOff;   // 4B
     public long classDefsSize;  // 4B
@@ -55,8 +55,8 @@ public class DexHeader {
         dh.typeIdsOff = s.readU4();
         dh.protoIdsSize = s.readU4();
         dh.protoIdsOff = s.readU4();
-        dh.filedIdsSize = s.readU4();
-        dh.filedIdsOff = s.readU4();
+        dh.fieldIdsSize = s.readU4();
+        dh.fieldIdsOff = s.readU4();
         dh.methodIdsSize = s.readU4();
         dh.methodIdsOff = s.readU4();
         dh.classDefsSize = s.readU4();
@@ -90,8 +90,8 @@ public class DexHeader {
         builder.append(String.format(form3, "typeIdsOff", PrintUtil.hex4(typeIdsOff), typeIdsOff));
         builder.append(String.format(form3, "protoIdsSize", PrintUtil.hex4(protoIdsSize), protoIdsSize));
         builder.append(String.format(form3, "protoIdsOff", PrintUtil.hex4(protoIdsOff), protoIdsOff));
-        builder.append(String.format(form3, "filedIdsSize", PrintUtil.hex4(filedIdsSize), filedIdsSize));
-        builder.append(String.format(form3, "filedIdsOff", PrintUtil.hex4(filedIdsOff), filedIdsOff));
+        builder.append(String.format(form3, "fieldIdsSize", PrintUtil.hex4(fieldIdsSize), fieldIdsSize));
+        builder.append(String.format(form3, "fieldIdsOff", PrintUtil.hex4(fieldIdsOff), fieldIdsOff));
         builder.append(String.format(form3, "methodIdsSize", PrintUtil.hex4(methodIdsSize), methodIdsSize));
         builder.append(String.format(form3, "methodIdsOff", PrintUtil.hex4(methodIdsOff), methodIdsOff));
         builder.append(String.format(form3, "classDefsSize", PrintUtil.hex4(classDefsSize), classDefsSize));

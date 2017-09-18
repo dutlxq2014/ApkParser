@@ -45,7 +45,7 @@ public class StringPool {
         StringBuilder builder = new StringBuilder();
         builder.append("-- String pool --\n");
         for (int i=0; i<stringDataOffsets.length; ++i) {
-            builder.append(String.format("offsets=%s\t %s\n", PrintUtil.hex4(stringDataOffsets[i]), stringDataItems[i].toString()));
+            builder.append(String.format("s%d. offsets=%s\t %s\n", i, PrintUtil.hex4(stringDataOffsets[i]), stringDataItems[i].toString()));
         }
         return builder.toString();
     }
