@@ -20,6 +20,7 @@ public class DexFile {
     public ProtoPool protoPool;
     public FieldPool fieldPool;
     public MethodPool methodPool;
+    public ClassPool classPool;
 
     public void parse(RandomAccessFile racFile) throws IOException {
         racFile.seek(0);
@@ -37,6 +38,7 @@ public class DexFile {
         protoPool = ProtoPool.parseFrom(racFile, mStreamer, dexHeader, stringPool, typePool);
         fieldPool = FieldPool.parseFrom(racFile, mStreamer, dexHeader, stringPool, typePool);
         methodPool = MethodPool.parseFrom(racFile, mStreamer, dexHeader, stringPool, typePool, protoPool);
+        classPool = ClassPool.parseFrom(racFile, mStreamer, dexHeader, stringPool, typePool, protoPool);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class DexFile {
         builder.append('\n');
         builder.append(methodPool);
         builder.append('\n');
+        builder.append(classPool);
         return builder.toString();
     }
 }
