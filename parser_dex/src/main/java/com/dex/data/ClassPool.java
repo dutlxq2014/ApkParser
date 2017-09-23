@@ -23,7 +23,7 @@ public class ClassPool {
             racFile.seek(dexHeader.classDefsOff + ClassDefItem.LENGTH * i);
             racFile.read(itemBytes, 0, itemBytes.length);
             s.use(itemBytes);
-            items[i] = ClassDefItem.parseFrom(s, stringPool, typePool);
+            items[i] = ClassDefItem.parseFrom(racFile, s, stringPool, typePool, protoPool);
         }
         return pool;
     }
@@ -33,7 +33,7 @@ public class ClassPool {
         StringBuilder builder = new StringBuilder();
         builder.append("-- Class pool --\n");
         for (int i=0; i<classItems.length; ++i) {
-            builder.append("id=").append(i).append('\n');
+            builder.append("Class #").append(i).append('\n');
             builder.append(classItems[i]);
         }
         return builder.toString();

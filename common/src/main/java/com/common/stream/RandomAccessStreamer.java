@@ -2,6 +2,9 @@ package com.common.stream;
 
 import com.common.LogUtil;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 /**
  *
  * Created by xueqiulxq on 16/07/2017.
@@ -107,6 +110,33 @@ public class RandomAccessStreamer {
             }
         }
         return ret;
+    }
+
+    public byte[] readUleb128BytesFrom(RandomAccessFile racFile) throws IOException {
+
+        byte[] buf = new byte[1];
+        long len = 0;
+        long remain = racFile.length() - racFile.getFilePointer();
+        for (int i=0; i<remain; ++i) {
+            byte b = racFile.readByte();
+            buf[i] = b;
+            ++len;
+            if ((b & 0x80) == 0) {
+                break;
+            }
+            if (len == buf.length) {
+                byte[] expand = new byte[buf.length * 2];
+                System.arraycopy(buf, 0, expand, 0, buf.length);
+                buf = expand;
+            }
+        }
+        if (len < buf.length) {
+            byte[] ret = new byte[(int) len];
+            System.arraycopy(buf, 0, ret, 0, (int) len);
+            return ret;
+        } else {
+            return buf;
+        }
     }
 
     public byte[] readUleb128Bytes() {
