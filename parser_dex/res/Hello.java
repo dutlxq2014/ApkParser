@@ -1,11 +1,16 @@
 
-public class Hello implements ISay {
+public class Hello implements ISay, IGreet {
 
     private static final String TAG = "Hello";
     public String vStr;
 
     public void doSay() {
         System.out.println("Hello dex.");
+    }
+
+    @Override
+    public void greet() {
+
     }
 
     @Override

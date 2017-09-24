@@ -28,6 +28,7 @@ public class ClassDefItem {
     public String superClassStr;
     public String sourceFileStr;
 
+    public ClassInterfaceItem interfaceItem;
     public ClassDataItem dataItem;
 
     public static ClassDefItem parseFrom(RandomAccessFile racFile, DexStreamer s,
@@ -50,6 +51,13 @@ public class ClassDefItem {
         racFile.seek(item.classDataOff);
         item.dataItem = ClassDataItem.parseFrom(racFile, s, stringPool, typePool, protoPool);
 
+        if (item.interfacesOff != 0) {
+            racFile.seek(item.interfacesOff);
+            item.interfaceItem = ClassInterfaceItem.parseFrom(racFile, s, stringPool, typePool, protoPool);
+        } else {
+            item.interfaceItem = new ClassInterfaceItem();
+        }
+
         return item;
     }
 
@@ -61,11 +69,14 @@ public class ClassDefItem {
         builder.append(String.format(form3, "classIdx", PrintUtil.hex4(classIdx), classStr));
         builder.append(String.format(form3, "accessFlags", PrintUtil.hex4(accessFlags), AccessFlags.accClassStr(accessFlags)));
         builder.append(String.format(form3, "superClassIdx", PrintUtil.hex4(superClassIdx), superClassStr));
-        builder.append(String.format(form3, "interfacesOff", PrintUtil.hex4(interfacesOff), "->"));
+        builder.append(String.format(form3, "interfacesOff", PrintUtil.hex4(interfacesOff), "-> ClassInterfaceItem"));
         builder.append(String.format(form3, "sourceFileIdx", PrintUtil.hex4(sourceFileIdx), sourceFileStr));
         builder.append(String.format(form3, "annotationsOff", PrintUtil.hex4(annotationsOff), "->"));
         builder.append(String.format(form3, "classDataOff", PrintUtil.hex4(classDataOff), "-> ClassDataItem"));
         builder.append(String.format(form3, "staticValueOff", PrintUtil.hex4(staticValueOff), "->"));
+
+        String itfStr = interfaceItem.toString();
+        builder.append(PrintUtil.indent(itfStr));
         String dataItemStr = dataItem.toString();
         builder.append(PrintUtil.indent(dataItemStr));
 

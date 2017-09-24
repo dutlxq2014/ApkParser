@@ -23,6 +23,7 @@ public class ProtoDataItem {
     //
     public long parameterCount = 0;
     public int[] parameterIdx;      // 2B * n
+    // Assistant
     public String[] parameters;
 
     public static ProtoDataItem parseFrom(RandomAccessFile racFile, DexStreamer s, StringPool stringPool, TypePool typePool) throws IOException {
