@@ -72,24 +72,28 @@ public class ClassDataItem {
         builder.append(String.format(form2, "directMethodsSize", PrintUtil.hex4(directMethodsSize)));
         builder.append(String.format(form2, "virtualMethodSize", PrintUtil.hex4(virtualMethodSize)));
 
-        String form = "// %s: size=%d\n";
+        String form = "# %s: size=%d\n";
         builder.append(String.format(form, "static fields", staticFieldsSize));
         for (int i=0; i<staticFields.length; ++i) {
-            builder.append(staticFields[i]);
+            String fieldStr = staticFields[i].toString();
+            builder.append(PrintUtil.indent(fieldStr));
         }
         builder.append(String.format(form, "instance fields", instanceFieldsSize));
         for (int i=0; i<instanceFields.length; ++i) {
-            builder.append(instanceFields[i]);
+            String fieldStr = instanceFields[i].toString();
+            builder.append(PrintUtil.indent(fieldStr));
         }
         builder.append(String.format(form, "direct methods", directMethodsSize));
         for (int i=0; i<directMethods.length; ++i) {
             builder.append("DMethod #").append(i).append('\n');
-            builder.append(directMethods[i]);
+            String methodStr = directMethods[i].toString();
+            builder.append(PrintUtil.indent(methodStr));
         }
         builder.append(String.format(form, "virtual methods", virtualMethodSize));
         for (int i=0; i<virtualMethods.length; ++i) {
             builder.append("VMethod #").append(i).append('\n');
-            builder.append(virtualMethods[i]);
+            String methodStr = virtualMethods[i].toString();
+            builder.append(PrintUtil.indent(methodStr));
         }
         return builder.toString();
     }

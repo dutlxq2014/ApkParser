@@ -1,14 +1,20 @@
 
-public class Hello {
+public class Hello implements ISay {
 
-    private static final String sFinalStr = "finalStr";
+    private static final String TAG = "Hello";
     public String vStr;
 
-    public void func() {
+    public void doSay() {
+        System.out.println("Hello dex.");
+    }
 
+    @Override
+    public void sayHello() {
+        doSay();
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello, Dex.");
+        Hello hello = new Hello();
+        hello.sayHello();
     }
 }

@@ -57,19 +57,17 @@ public class ClassDefItem {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        String form2 = "%-16s%s\n";
         String form3 = "%-16s%-16s%s\n";
         builder.append(String.format(form3, "classIdx", PrintUtil.hex4(classIdx), classStr));
         builder.append(String.format(form3, "accessFlags", PrintUtil.hex4(accessFlags), AccessFlags.accClassStr(accessFlags)));
         builder.append(String.format(form3, "superClassIdx", PrintUtil.hex4(superClassIdx), superClassStr));
-        builder.append(String.format(form2, "interfacesOff", PrintUtil.hex4(interfacesOff)));
+        builder.append(String.format(form3, "interfacesOff", PrintUtil.hex4(interfacesOff), "->"));
         builder.append(String.format(form3, "sourceFileIdx", PrintUtil.hex4(sourceFileIdx), sourceFileStr));
-        builder.append(String.format(form2, "annotationsOff", PrintUtil.hex4(annotationsOff)));
-        builder.append(String.format(form2, "classDataOff", PrintUtil.hex4(classDataOff)));
-        builder.append(String.format(form2, "staticValueOff", PrintUtil.hex4(staticValueOff)));
+        builder.append(String.format(form3, "annotationsOff", PrintUtil.hex4(annotationsOff), "->"));
+        builder.append(String.format(form3, "classDataOff", PrintUtil.hex4(classDataOff), "-> ClassDataItem"));
+        builder.append(String.format(form3, "staticValueOff", PrintUtil.hex4(staticValueOff), "->"));
         String dataItemStr = dataItem.toString();
-        dataItemStr = dataItemStr.trim().replace("\n", "\n\t");
-        builder.append("\t").append(dataItemStr).append('\n');
+        builder.append(PrintUtil.indent(dataItemStr));
 
         return builder.toString();
     }

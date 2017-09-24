@@ -34,4 +34,8 @@ public class PrintUtil {
         }
         return builder.toString();
     }
+
+    public static String indent(String src) {
+        return "\t" + src.trim().replace("\n", "\n\t") + "\n";
+    }
 }

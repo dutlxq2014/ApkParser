@@ -54,7 +54,7 @@ public class EncodedMethod {
         String form3 = "%-20s0x%s \t%s\n";
         builder.append(String.format(form2, "methodIdxDiff", PrintUtil.hex(methodIdxDiff)));
         builder.append(String.format(form3, "accessFlags", PrintUtil.hex(accessFlags), AccessFlags.accMethodStr(accessFlagsInt)));
-        builder.append(String.format(form2, "codeOff", PrintUtil.hex(codeOff)));
+        builder.append(String.format(form3, "codeOff", PrintUtil.hex(codeOff), "-> CodeItem"));
         if (codeItem != null) {
             String codeItemStr = codeItem.toString();
             builder.append("\t").append(codeItemStr.trim().replace("\n", "\n\t")).append('\n');
