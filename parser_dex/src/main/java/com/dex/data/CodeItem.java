@@ -37,14 +37,14 @@ public class CodeItem {
         item.debugInfoOff = s.readU4();
         item.insnsSize = s.readU4();
         item.insns = new int[0];
-//        int[] insns = item.insns = new int[(int) item.insnsSize];
-//
-//        byte[] insnsBytes = new byte[insns.length * 2];
-//        racFile.read(insnsBytes, 0, insnsBytes.length);
-//        s.use(insnsBytes);
-//        for (int i=0; i<insns.length; ++i) {
-//            insns[i] = s.readU2();
-//        }
+        int[] insns = item.insns = new int[(int) item.insnsSize];
+
+        byte[] insnsBytes = new byte[insns.length * 2];
+        racFile.read(insnsBytes, 0, insnsBytes.length);
+        s.use(insnsBytes);
+        for (int i=0; i<insns.length; ++i) {
+            insns[i] = s.readU2();
+        }
 
         return item;
     }
@@ -62,6 +62,7 @@ public class CodeItem {
         builder.append(String.format(form2Str, "debugInfoOff", debugInfoOff));
         builder.append(String.format(form2Str, "insnsSize", insnsSize));
         builder.append('\n');
+        builder.append("insns[]: ");
         for (int i=0; i<insns.length; ++i) {
             builder.append(PrintUtil.hex2(insns[i])).append(' ');
         }

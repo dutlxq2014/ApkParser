@@ -87,7 +87,7 @@ public class RandomAccessStreamer {
                 ret |= (buf[i] & 0xff);
             }
         } else {
-            for (int i=0; i<=4; ++i) {
+            for (int i=0; i<=3; ++i) {
                 ret <<= 8;
                 ret |= (buf[i] & 0xff);
             }
@@ -104,7 +104,7 @@ public class RandomAccessStreamer {
                 ret |= (buf[i] & 0xff);
             }
         } else {
-            for (int i=0; i<=4; ++i) {
+            for (int i=0; i<=3; ++i) {
                 ret <<= 8;
                 ret |= (buf[i] & 0xff);
             }

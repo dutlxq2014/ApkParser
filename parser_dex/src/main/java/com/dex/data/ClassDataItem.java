@@ -46,9 +46,9 @@ public class ClassDataItem {
         for (int i=0; i<item.staticFieldsSize; ++i) {
             staticField[i] = EncodedField.parseFrom(racFile, s, stringPool, typePool, protoPool);
         }
-        EncodedField[] instanceFiels = item.instanceFields = new EncodedField[(int) item.instanceFieldsSize];
+        EncodedField[] instanceFields = item.instanceFields = new EncodedField[(int) item.instanceFieldsSize];
         for (int i=0; i<item.instanceFieldsSize; ++i) {
-            instanceFiels[i] = EncodedField.parseFrom(racFile, s, stringPool, typePool, protoPool);
+            instanceFields[i] = EncodedField.parseFrom(racFile, s, stringPool, typePool, protoPool);
         }
         EncodedMethod[] directMethods = item.directMethods = new EncodedMethod[(int) item.directMethodsSize];
         for (int i=0; i<item.directMethodsSize; ++i) {

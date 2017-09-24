@@ -35,6 +35,7 @@ public class ClassPool {
         for (int i=0; i<classItems.length; ++i) {
             builder.append("Class #").append(i).append('\n');
             builder.append(classItems[i]);
+            builder.append('\n');
         }
         return builder.toString();
     }
